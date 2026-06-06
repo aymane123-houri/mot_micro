@@ -1,0 +1,676 @@
+<!-- page2.html -->
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #afficherImageBtn {
+            width: 400px; /* Ajustez cette valeur en fonction de vos besoins */
+            height: 400px; /* Ajustez cette valeur en fonction de vos besoins */
+            background-color: transparent;
+            border: none;
+            overflow: hidden;
+        }
+
+        #afficherImageBtn img {
+            width: 50%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        var themes = {
+            nature: ['img11.png', 'img22.png', 'img3.png'],
+            2_animaux: ['image1.png', 'image2.png', 'image3.png', 'image4.png', 'image5.png', 'image6.png', 'image7.png'],
+            ville: ['img101.png', 'img102.png', 'img103.png', 'img104.png', 'img105.png']
+        
+        };
+
+        var toutesLesImages = [];
+        var imagesRestantes = [];
+
+        function initialiserImages(theme) {
+            toutesLesImages = themes[theme].slice();  // Copier le tableau du thème sélectionné
+            shuffleArray(toutesLesImages);
+            imagesRestantes = toutesLesImages.slice();  // Copier le tableau original
+        }
+
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+
+        function afficherImageSuivante() {
+            if (imagesRestantes.length === 0) {
+                // Si toutes les images ont été affichées, désactiver le bouton
+                document.getElementById('afficherImageBtn').disabled = true;
+                return;
+            }
+
+            var imageSelectionnee = imagesRestantes.pop();
+            document.getElementById('image').src = imageSelectionnee;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var themeSelectionne = urlParams.get('theme');
+
+            if (themeSelectionne) {
+                initialiserImages(themeSelectionne);
+                document.getElementById('afficherImageBtn').disabled = false;
+                afficherImageSuivante();
+            }
+        });
+    </script>
+ <button id="afficherImageBtn" onclick="afficherImageSuivante()" style="background-color: transparent; border: none; width: 100%;height: 100%;"><img id="image" src="" alt="Image" style="max-width: 90%;max-height: 80vh;margin-top: 20px;"></button>
+  <!--<img id="image" src="" alt="Image" style="max-width: 90%;max-height: 80vh;margin-top: 20px;">
+  <button id="afficherImageBtn" onclick="afficherImageSuivante()" >Afficher Image Suivante</button>-->
+ <!--</body>
+</html>-->
+
+
+
+
+
+
+
+
+
+
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand:400,700&display=swap">
+    <style>
+
+#imageContainer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #afficherImageBtn {
+            border: none;
+            background: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        #image {
+            width: 20vw; /* Définissez la largeur souhaitée */
+            height: 20vw; /* Définissez la hauteur souhaitée */
+            object-fit: cover; /* Garantit que l'image remplit complètement le conteneur sans déformation */
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9fbe7;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+   /*      #imageContainer {
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+       #afficherImageBtn {
+            width: 100%;
+            padding: 15px;
+            background-color: #4caf50;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease-in-out;
+        }
+*/
+      /*  #afficherImageBtn:hover {
+            background-color: #388e3c;
+        }*/
+
+        #afficherImageBtn:disabled {
+            background-color: #dcdcdc;
+            cursor: not-allowed;
+        }
+
+        #afficherImageBtn img {
+            width: 100%;
+            height: 500px;
+            border-radius: 15px;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        #afficherImageBtn[disabled] img {
+            opacity: 0.7;
+        }
+
+     /*   #afficherImageBtn img:hover {
+            transform: scale(1.1);
+        }*/
+
+        h1 {
+            color: #4caf50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="imageContainer">
+        <button id="afficherImageBtn" onclick="afficherImageSuivante()" style="background-color: transparent; border: none; width: 100%; height: 100%;">
+            <img id="image" src="" alt="Image" style="max-width: 100%; max-height: 80vh; margin-top: 20px;">
+        </button>  
+    </div>
+
+    <script>
+        var themes = {
+            adjectifs_qualificatifs: ['1_adjectifs_qualificatifs/agreable.png'," 1_adjectifs_qualificatifs/agressif.png", "1_adjectifs_qualificatifs/ancien.png", "1_adjectifs_qualificatifs/bon.png", "1_adjectifs_qualificatifs/chaud.jpg", "1_adjectifs_qualificatifs/content.png", "1_adjectifs_qualificatifs/courageux.png", "1_adjectifs_qualificatifs/court.png" , "1_adjectifs_qualificatifs/dangereux.png", "1_adjectifs_qualificatifs/delicieux.png", "1_adjectifs_qualificatifs/difficile.png", "1_adjectifs_qualificatifs/drole.jpg", "1_adjectifs_qualificatifs/dur.jpg", "1_adjectifs_qualificatifs/elegent.png", "1_adjectifs_qualificatifs/en colere.png", "1_adjectifs_qualificatifs/fache.png", "1_adjectifs_qualificatifs/facile.png", "1_adjectifs_qualificatifs/faible.jpg", "1_adjectifs_qualificatifs/fatigue.png", "1_adjectifs_qualificatifs/fidele.png", "1_adjectifs_qualificatifs/fier.png", "1_adjectifs_qualificatifs/fort.jpg", "1_adjectifs_qualificatifs/fou.png", "1_adjectifs_qualificatifs/frais.jpg ", "1_adjectifs_qualificatifs/gourmand.png", "1_adjectifs_qualificatifs/grand.png", "1_adjectifs_qualificatifs/gros.png", "1_adjectifs_qualificatifs/intelligent.png", "1_adjectifs_qualificatifs/jeune.png", "1_adjectifs_qualificatifs/joli.png", "1_adjectifs_qualificatifs/laide.png", "1_adjectifs_qualificatifs/leger.jpg", "1_adjectifs_qualificatifs/lent.png", "1_adjectifs_qualificatifs/loin.png", "1_adjectifs_qualificatifs/long.png", "1_adjectifs_qualificatifs/lourd.jpg", "1_adjectifs_qualificatifs/maigre.png", "1_adjectifs_qualificatifs/malade.png", "1_adjectifs_qualificatifs/mauvais.png", "1_adjectifs_qualificatifs/mou.jpg", "1_adjectifs_qualificatifs/mouille.png", "1_adjectifs_qualificatifs/paresseux.png", "1_adjectifs_qualificatifs/pauvre.png", "1_adjectifs_qualificatifs/petit.png", "1_adjectifs_qualificatifs/peureux.png", "1_adjectifs_qualificatifs/plein.png", "1_adjectifs_qualificatifs/proche.png", "1_adjectifs_qualificatifs/propre.png", "1_adjectifs_qualificatifs/rapide.png", "1_adjectifs_qualificatifs/riche.png", "1_adjectifs_qualificatifs/sale.png", "1_adjectifs_qualificatifs/sec.png", "1_adjectifs_qualificatifs/serieux.png", "1_adjectifs_qualificatifs/stupide.png", "1_adjectifs_qualificatifs/surpris.png", "1_adjectifs_qualificatifs/timide.png", "1_adjectifs_qualificatifs/triste.png", "1_adjectifs_qualificatifs/vide.png", "1_adjectifs_qualificatifs/vieux.png", "1_adjectifs_qualificatifs/belle.png", "1_adjectifs_qualificatifs/heureux.png", "1_adjectifs_qualificatifs/neuf.png", "1_adjectifs_qualificatifs/froid.jpg"],
+            Alimentation: ['8_alimentation/viande.png', '8_alimentation/z chou.png', '8_alimentation/z miel.png', '8_alimentation/z riz.png', '8_alimentation/z fain.png', '8_alimentation/ail.png', '8_alimentation/aubergine.png', '8_alimentation/baguette.png', '8_alimentation/beurre.png', '8_alimentation/boisson.png','8_alimentation/carotte.png', '8_alimentation/cerfeuil.png', '8_alimentation/champignon.png', '8_alimentation/citron.png', '8_alimentation/courgette.png', '8_alimentation/datte.png', '8_alimentation/diner.png', '8_alimentation/farine.png', '8_alimentation/fraise.png', '8_alimentation/fromage.png', '8_alimentation/fruits.png', '8_alimentation/grenade.png', '8_alimentation/huile_dolive.jpg', '8_alimentation/Le_dejeuner.jpg', '8_alimentation/le_petit_dejeuner.png', '8_alimentation/legumes.png', '8_alimentation/oignon.png', '8_alimentation/olives.png', '8_alimentation/orange.png', '8_alimentation/pain.png', '8_alimentation/pasteque.png', '8_alimentation/peche.png', '8_alimentation/petit_pois.png', '8_alimentation/poire.png', '8_alimentation/pomme_2.png', '8_alimentation/pomme_de_terre.png', '8_alimentation/poulet.png', '8_alimentation/radis.png', '8_alimentation/raisin.png', '8_alimentation/frite.png', '8_alimentation/salade.png', '8_alimentation/sucre.png', '8_alimentation/tomate.png','8_alimentation/melon.png','8_alimentation/poivron.png'],
+            animaux: ["2_animaux/animal.jpg", "2_animaux/loup.png", "2_animaux/agneau.png", "2_animaux/flaque.jpg", '2_animaux/ferme.jpg', '2_animaux/abeille.png', '2_animaux/aigle.png', '2_animaux/ane.png', '2_animaux/arbre.jpg', '2_animaux/arraignee.png', '2_animaux/autruche.png', '2_animaux/baleine.png', '2_animaux/bouc.png', '2_animaux/brebis.png', '2_animaux/chat.png', '2_animaux/cheval.png', '2_animaux/chevre.png', '2_animaux/chien.png', '2_animaux/cigogne.png', '2_animaux/cochon.png', '2_animaux/compagne.png', '2_animaux/coq.png', '2_animaux/crevette.png', '2_animaux/crocodile.png', '2_animaux/dromadaire.png', '2_animaux/ecureuil.png', '2_animaux/elephant.png', '2_animaux/escargot.png', '2_animaux/foret.png', '2_animaux/fourmi.png', '2_animaux/gazelle.png', '2_animaux/girafe.png', '2_animaux/gorille.png', '2_animaux/herisson.png', '2_animaux/hibou.png', '2_animaux/kangaurou.png', '2_animaux/koala.png', '2_animaux/lapin.png', '2_animaux/lion.png', '2_animaux/lizard.png', '2_animaux/mer.png', '2_animaux/montagne.jpg', '2_animaux/mouche.png', '2_animaux/moustique.jpg', '2_animaux/mouton.png', '2_animaux/oie.png', '2_animaux/oiseau.png', '2_animaux/oisillon.png', '2_animaux/ours.png', '2_animaux/papillon.png', '2_animaux/plage.png', '2_animaux/poisson.png', '2_animaux/poule.png', '2_animaux/poussin.png', '2_animaux/rat.png', '2_animaux/renard.png', '2_animaux/serpent.png', '2_animaux/singe.png', '2_animaux/souris.png', '2_animaux/taureau.png', '2_animaux/tigre.png', '2_animaux/tortue.png', '2_animaux/vache.png', '2_animaux/ver_de_terre.png', '2_animaux/zebre.png', "2_animaux/le champ de blé.jpg", "2_animaux/lac.png", "2_animaux/zoo.png", "2_animaux/fleur.png", "2_animaux/herbes.png", "2_animaux/coccinelle.png", "2_animaux/étable.png", "2_animaux/nid.png", "2_animaux/chenille.png", "2_animaux/révière.png", "2_animaux/sauterelle.png", "2_animaux/requin.png", "2_animaux/dauphin.png", "2_animaux/phoque.png", "2_animaux/grenouille.png"],
+            corps_hummain:['4_corps_hummain/cerveau.png', '4_corps_hummain/peau.png','4_corps_hummain/corps.jpg', '4_corps_hummain/gorge.png', '4_corps_hummain/barbe.png', '4_corps_hummain/cheveux.png', '4_corps_hummain/menton.png', '4_corps_hummain/coeur.png', '4_corps_hummain/cou.png', '4_corps_hummain/dent.png', '4_corps_hummain/dot.png', '4_corps_hummain/epaule.png', '4_corps_hummain/estomaque.png', '4_corps_hummain/euil.png', '4_corps_hummain/joue.png', '4_corps_hummain/la_langue.png', '4_corps_hummain/la_tete.png', '4_corps_hummain/la_ventre.jpg', '4_corps_hummain/le_visage.png', '4_corps_hummain/le_bras.png', '4_corps_hummain/le_coude.png', '4_corps_hummain/le_doigt.png', '4_corps_hummain/le_front.png', '4_corps_hummain/le_genou.png', '4_corps_hummain/le_nez.png', '4_corps_hummain/le_pied.png', '4_corps_hummain/les_jambes.png', '4_corps_hummain/levres.png', '4_corps_hummain/main.png', '4_corps_hummain/ongle.png', '4_corps_hummain/os.png', '4_corps_hummain/poitrine.png', '4_corps_hummain/sourcil.png', '4_corps_hummain/squelette.png', '4_corps_hummain/une_tresse.png' ,'4_corps_hummain/une_oreille.png', '4_corps_hummain/la_bouche.png'],
+            maison:  ['5_maison/placard.png', '5_maison/étagère.png','5_maison/terrasse.jpg', '5_maison/portail.png', '5_maison/appartement.png', '5_maison/couloir.png', '5_maison/cuisine.png', '5_maison/étage.png', '5_maison/jouets.png', '5_maison/le coin.png', '5_maison/plat.png', '5_maison/aiguille.png', '5_maison/armoire.png', '5_maison/baignoire.png', '5_maison/balai.png', '5_maison/boite.png', '5_maison/briquet.png', '5_maison/brosse.png', '5_maison/canape.png', '5_maison/chambre.jpg', '5_maison/cle.png', '5_maison/clou.png', '5_maison/coussin.png', '5_maison/echelle.png', '5_maison/escalier.png', '5_maison/etagere.png', '5_maison/fauteuil.png', '5_maison/horloge.png', '5_maison/immeuble.png', '5_maison/lampe.png', '5_maison/lit.png', '5_maison/maison.png', '5_maison/marteau.png', '5_maison/Miroir.png', '5_maison/mouchoir.png', '5_maison/mur.png', '5_maison/oreiller.png', '5_maison/peigne.png', '5_maison/peinture.png', '5_maison/pelle.png', '5_maison/piece.png', '5_maison/portefeuille.png', '5_maison/reveil.png', '5_maison/rideau.png', '5_maison/salle_de_bain.png', '5_maison/sol.png', '5_maison/tele.jfif', '5_maison/telephone.png', '5_maison/tiroir.jpg', '5_maison/tois.png', '5_maison/volet.png'],
+            metiers_et_professions:  ['metiers_et_professions/architecte.png', 'metiers_et_professions/avocat.png', 'metiers_et_professions/boucher1.jpg', 'metiers_et_professions/coiffeur.png', 'metiers_et_professions/couturiere.png', 'metiers_et_professions/dentiste.jpg', 'metiers_et_professions/electricien.png', 'metiers_et_professions/enseignant.jpg', 'metiers_et_professions/fermier.png', 'metiers_et_professions/gardien.png', 'metiers_et_professions/infirmiere.jpg', 'metiers_et_professions/jardinier.jpg', 'metiers_et_professions/journaliste.png', 'metiers_et_professions/juge.png', 'metiers_et_professions/femme_de_menage.png', 'metiers_et_professions/patissiere.png', 'metiers_et_professions/berger.png', 'metiers_et_professions/caissier.png', 'metiers_et_professions/directeur.jpg', 'metiers_et_professions/libraire.png', 'metiers_et_professions/marchand.png', 'metiers_et_professions/maçon.png', 'metiers_et_professions/maitresse.png', 'metiers_et_professions/mecanicien.jpg', 'metiers_et_professions/medecin.png', 'metiers_et_professions/menuisier.jpg', 'metiers_et_professions/musicien.png', 'metiers_et_professions/pilote.jpg', 'metiers_et_professions/pirate.png', 'metiers_et_professions/reine.png', 'metiers_et_professions/pompier.png', 'metiers_et_professions/roi.png', 'metiers_et_professions/serveur.jpg', 'metiers_et_professions/soldat.jpg', 'metiers_et_professions/sourciere.png', 'metiers_et_professions/veterinaire.png'],
+            ecole_et_coleur: ['3_école_couleur/alphabet.png' , '3_école_couleur/apprendre.png' , '3_école_couleur/ardoise.png' , '3_école_couleur/bureau.png' , '3_école_couleur/camarade.png' , '3_école_couleur/cartable 2.png' , '3_école_couleur/carte.png' , '3_école_couleur/chaise.png' , '3_école_couleur/ciseau.png' , '3_école_couleur/cloche.png' , '3_école_couleur/cole.png' , '3_école_couleur/cour de récréation.jpg' , '3_école_couleur/craie.png' , '3_école_couleur/crayon_(5).png' , '3_école_couleur/drapeau.png' , '3_école_couleur/école.jpg' , '3_école_couleur/eleve.png' , '3_école_couleur/fenêtre.png' , '3_école_couleur/crayon de couleur.png' , '3_école_couleur/La gomme.png' , '3_école_couleur/la trousse.jpg' , '3_école_couleur/nombre.png' , '3_école_couleur/papier.jpg' , '3_école_couleur/porte.png' , '3_école_couleur/punaise 2.png' , '3_école_couleur/règle.png' , '3_école_couleur/Stylo.jpg' , '3_école_couleur/tableau.png' , '3_école_couleur/tablier.png' , '3_école_couleur/taille crayon.png' , '3_école_couleur/z coul blanc.png' , '3_école_couleur/z coul bleu.png' , '3_école_couleur/z coul jaune.png' , '3_école_couleur/z coul marron.png' , '3_école_couleur/z coul noir.png' , '3_école_couleur/z coul orange.png' , '3_école_couleur/z coul rose.png' , '3_école_couleur/z coul rouge.png', '3_école_couleur/z coul violet.png' , '3_école_couleur/z coul vert.png'],
+            transport:  ['transport/aeroport.png', 'transport/ambulance.png', 'transport/avion.png', 'transport/barque.png', 'transport/bateau.png', 'transport/bus.png', 'transport/chemin_de_fer.png', 'transport/gare.png', 'transport/helicoptere.png', 'transport/moto.png', 'transport/navire.png', 'transport/parachute.jpg', 'transport/port.png', 'transport/poussette.png', 'transport/roue.png', 'transport/rue.png', 'transport/train.png', 'transport/velo.png', 'transport/voiture.gif'],
+            cuisine: ['6 cuisine et toilette/baignoire.png', '6 cuisine et toilette/bol.png', '6 cuisine et toilette/brosse_a_dents.png', '6 cuisine et toilette/casserole.png', '6 cuisine et toilette/congélateur.png', '6 cuisine et toilette/Corbeille.png', '6 cuisine et toilette/coupe ongles.png', '6 cuisine et toilette/couteau.png', '6 cuisine et toilette/dentifrice.png', '6 cuisine et toilette/eau.png', '6 cuisine et toilette/éponge.png', '6 cuisine et toilette/four.png', '6 cuisine et toilette/fourchette.png', '6 cuisine et toilette/gel_douche.png', '6 cuisine et toilette/lavabo.png', '6 cuisine et toilette/machine_a_laver.png', '6 cuisine et toilette/marmite.png', '6 cuisine et toilette/Moulin à legumes.jpg', '6 cuisine et toilette/panier.png', '6 cuisine et toilette/peigne.png', '6 cuisine et toilette/poèle.png', '6 cuisine et toilette/poubelle.png', '6 cuisine et toilette/réfrigérateur.png', '6 cuisine et toilette/robinet.png', '6 cuisine et toilette/savonette.png', '6 cuisine et toilette/seau.png', '6 cuisine et toilette/table.png', '6 cuisine et toilette/verre.png', '6 cuisine et toilette/y paille.jpeg', '6 cuisine et toilette/z assiette.png', '6 cuisine et toilette/z bouteille.png', '6 cuisine et toilette/z cuillère 1.png', '6 cuisine et toilette/z cuisinière.png', '6 cuisine et toilette/z serviette.png', '6 cuisine et toilette/z soupiere.png'],
+            vetement: ['vetement/bague.png', 'vetement/bonnet.png', 'vetement/bottes.png', 'vetement/bracelet.jpg', 'vetement/boucles_d_oreilles.png', 'vetement/casquette.png', 'vetement/ceinture.jpg', 'vetement/chapeau.jpg', 'vetement/chaussette.png', 'vetement/chaussure.png', 'vetement/chemise.png', 'vetement/colier.png', 'vetement/cravate.png', 'vetement/foulard.png', 'vetement/gants.png', 'vetement/jupe.png', 'vetement/lunette.png', 'vetement/maillot.png', 'vetement/manteau.png', 'vetement/pantalon.png', 'vetement/pantoufle.png', 'vetement/poche.png', 'vetement/pull.png', 'vetement/pyjama.png', 'vetement/robe.png', 'vetement/tee_shirt.png', 'vetement/echarpe.png']
+        };
+
+        var toutesLesImages = [];
+        var imagesRestantes = [];
+
+        function initialiserImages(theme) {
+            toutesLesImages = themes[theme].slice();
+            shuffleArray(toutesLesImages);
+            imagesRestantes = toutesLesImages.slice();
+        }
+
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+
+        function afficherImageSuivante() {
+            if (imagesRestantes.length === 0) {
+                document.getElementById('afficherImageBtn').disabled = true;
+                return;
+            }
+
+            var imageSelectionnee = imagesRestantes.pop();
+            document.getElementById('image').src = imageSelectionnee;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var themeSelectionne = urlParams.get('theme');
+
+            if (themeSelectionne) {
+                initialiserImages(themeSelectionne);
+                document.getElementById('afficherImageBtn').disabled = false;
+                afficherImageSuivante();
+            }
+        });
+        function afficherImageSuivanteAvecDelai() {
+            afficherImageSuivante();
+            setTimeout(afficherImageSuivanteAvecDelai, 1000); // 1200 millisecondes = 3 secondes
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var themeSelectionne = urlParams.get('theme');
+
+            if (themeSelectionne) {
+                initialiserImages(themeSelectionne);
+                document.getElementById('afficherImageBtn').disabled = false;
+                afficherImageSuivanteAvecDelai(); // Utilisez cette fonction avec le délai
+            }
+        });
+    </script>
+</body>
+</html>-->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand:400,700&display=swap">
+    <style>
+        /* Styles existants */
+      /*  #imageContainer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #afficherImageBtn {
+            border: none;
+            background: none;
+            cursor: pointer;
+            outline: none;
+        }*/
+        #afficherImageBtn {
+           /* width: 400px; 
+            height: 400px; 
+            background-color: transparent;
+            border: none;
+            overflow: hidden;*/
+            width: 100%;
+            padding: 15px;
+            background-color: #4caf50;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease-in-out;
+        }
+        /*#image {
+            width: 20vw;
+            height: 20vw;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }*/
+        #afficherImageBtn img {
+            width: 100%; /* L'image prendra toute la largeur du conteneur */
+    height: 500px; /* L'image prendra toute la hauteur du conteneur */
+    object-fit: cover; /* Gère le recadrage de l'image pour remplir sans déformation */
+    border-radius: 10px; /* Optionnel : coins arrondis */
+        }
+
+        /*body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9fbe7;
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }*/
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+        }
+        #congratulations {
+            display: none;
+            font-size: 3em;
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        #finalScore {
+            
+            display: none;
+            font-size: 1.5em;
+            color: green;
+            font-weight: bold;
+            margin-top: 10px;
+            
+
+            /* Styles pour placer en haut de la page */
+    position: fixed; /* Fixé par rapport à la fenêtre */
+    top: 10px;       /* Distance du haut */
+    left: 50%;       /* Centré horizontalement */
+    transform: translateX(-50%); /* Ajuste pour le centrer */
+    z-index: 1000;   /* Assure qu'il reste au-dessus des autres éléments */
+        }
+
+        #clock {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #333;
+        }
+        #canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Place le canevas derrière les autres éléments */
+}
+    </style>
+</head>
+<body>
+    <h1 id="clock">00:00</h1>
+    <h1>Score: <span id="score">0</span></h1>
+    <div id="imageContainer">
+        <button id="afficherImageBtn" onclick="afficherImageSuivante()" style="background-color: transparent; border: none; width: 100%; height: 100%;">
+            <img id="image" src="" alt="Image">
+        </button>  
+    </div>
+    <h1 id="congratulations">Félicitations !</h1>
+    <br>
+<h1 id="finalScore" style="top: 20%;">
+    Votre score final : <span id="finalScoreValue"></span><br>
+    Temps écoulé : <span id="finalTime"></span>
+</h1>
+<canvas id="canvas" ></canvas>
+    <script>
+        var themes = {
+           adjectifs_qualificatifs: ['1_adjectifs_qualificatifs/agreable.png'," 1_adjectifs_qualificatifs/agressif.png", "1_adjectifs_qualificatifs/ancien.png", "1_adjectifs_qualificatifs/bon.png", "1_adjectifs_qualificatifs/chaud.jpg", "1_adjectifs_qualificatifs/content.png", "1_adjectifs_qualificatifs/courageux.png", "1_adjectifs_qualificatifs/court.png" , "1_adjectifs_qualificatifs/dangereux.png", "1_adjectifs_qualificatifs/delicieux.png", "1_adjectifs_qualificatifs/difficile.png", "1_adjectifs_qualificatifs/drole.jpg", "1_adjectifs_qualificatifs/dur.jpg", "1_adjectifs_qualificatifs/elegent.png", "1_adjectifs_qualificatifs/en colere.png", "1_adjectifs_qualificatifs/fache.png", "1_adjectifs_qualificatifs/facile.png", "1_adjectifs_qualificatifs/faible.jpg", "1_adjectifs_qualificatifs/fatigue.png", "1_adjectifs_qualificatifs/fidele.png", "1_adjectifs_qualificatifs/fier.png", "1_adjectifs_qualificatifs/fort.jpg", "1_adjectifs_qualificatifs/fou.png", "1_adjectifs_qualificatifs/frais.jpg ", "1_adjectifs_qualificatifs/gourmand.png", "1_adjectifs_qualificatifs/grand.png", "1_adjectifs_qualificatifs/gros.png", "1_adjectifs_qualificatifs/intelligent.png", "1_adjectifs_qualificatifs/jeune.png", "1_adjectifs_qualificatifs/joli.png", "1_adjectifs_qualificatifs/laide.png", "1_adjectifs_qualificatifs/leger.jpg", "1_adjectifs_qualificatifs/lent.png", "1_adjectifs_qualificatifs/loin.png", "1_adjectifs_qualificatifs/long.png", "1_adjectifs_qualificatifs/lourd.jpg", "1_adjectifs_qualificatifs/maigre.png", "1_adjectifs_qualificatifs/malade.png", "1_adjectifs_qualificatifs/mauvais.png", "1_adjectifs_qualificatifs/mou.jpg", "1_adjectifs_qualificatifs/mouille.png", "1_adjectifs_qualificatifs/paresseux.png", "1_adjectifs_qualificatifs/pauvre.png", "1_adjectifs_qualificatifs/petit.png", "1_adjectifs_qualificatifs/peureux.png", "1_adjectifs_qualificatifs/plein.png", "1_adjectifs_qualificatifs/proche.png", "1_adjectifs_qualificatifs/propre.png", "1_adjectifs_qualificatifs/rapide.png", "1_adjectifs_qualificatifs/riche.png", "1_adjectifs_qualificatifs/sale.png", "1_adjectifs_qualificatifs/sec.png", "1_adjectifs_qualificatifs/serieux.png", "1_adjectifs_qualificatifs/stupide.png", "1_adjectifs_qualificatifs/surpris.png", "1_adjectifs_qualificatifs/timide.png", "1_adjectifs_qualificatifs/triste.png", "1_adjectifs_qualificatifs/vide.png", "1_adjectifs_qualificatifs/vieux.png", "1_adjectifs_qualificatifs/belle.png", "1_adjectifs_qualificatifs/heureux.png", "1_adjectifs_qualificatifs/neuf.png", "1_adjectifs_qualificatifs/froid.jpg"],
+            Alimentation: ['8_alimentation/viande.png', '8_alimentation/z chou.png', '8_alimentation/z miel.png', '8_alimentation/z riz.png', '8_alimentation/z fain.png', '8_alimentation/ail.png', '8_alimentation/aubergine1.jpeg', '8_alimentation/baguette.png', '8_alimentation/beurre.png', '8_alimentation/boisson.png','8_alimentation/carotte.png', '8_alimentation/cerfeuil.png', '8_alimentation/champignon.png', '8_alimentation/citron.png', '8_alimentation/courgette.png', '8_alimentation/datte.png', '8_alimentation/diner.png', '8_alimentation/farine.png', '8_alimentation/fraise.png', '8_alimentation/fromage.png', '8_alimentation/fruits.png', '8_alimentation/grenade.png', '8_alimentation/huile_dolive.jpg', '8_alimentation/Le_dejeuner.jpg', '8_alimentation/le_petit_dejeuner.png', '8_alimentation/legumes.png', '8_alimentation/oignon.png', '8_alimentation/olives.png', '8_alimentation/orange.png', '8_alimentation/pain.png', '8_alimentation/pasteque.png', '8_alimentation/peche.png', '8_alimentation/petit_pois.png', '8_alimentation/poire.png', '8_alimentation/pomme_2.png', '8_alimentation/pomme_de_terre.png', '8_alimentation/poulet.png', '8_alimentation/radis.png', '8_alimentation/raisin.png', '8_alimentation/frite.png', '8_alimentation/salade.png', '8_alimentation/sucre.png', '8_alimentation/tomate.png','8_alimentation/melon.png','8_alimentation/poivron.png'],
+            ecole_et_couleurs: ['3_école_couleur/alphabet.png', '3_école_couleur/apprendre.png', '3_école_couleur/ardoise.png', '3_école_couleur/bureau.png', '3_école_couleur/camarade.png', '3_école_couleur/cartable 2.png', '3_école_couleur/carte.png', '3_école_couleur/chaise.png', '3_école_couleur/ciseau.png', '3_école_couleur/cloche.png', '3_école_couleur/cole.png', '3_école_couleur/cour de récréation.jpg', '3_école_couleur/craie.png', '3_école_couleur/crayon de couleur.png', '3_école_couleur/crayon_(5).png', '3_école_couleur/drapeau.png', '3_école_couleur/école.jpg', '3_école_couleur/eleve.png', '3_école_couleur/fenêtre.png', '3_école_couleur/kindpng_3155983.png', '3_école_couleur/La gomme.png', '3_école_couleur/la trousse.jpg', '3_école_couleur/nombre.png', '3_école_couleur/papier.jpg', '3_école_couleur/porte.png', '3_école_couleur/punaise 2.png', '3_école_couleur/règle.png', '3_école_couleur/Stylo.jpg', '3_école_couleur/tableau.png', '3_école_couleur/tablier.png', '3_école_couleur/taille crayon.png', '3_école_couleur/z coul blanc.png', '3_école_couleur/z coul blue.png', '3_école_couleur/z coul jaune.png', '3_école_couleur/z coul marron.png', '3_école_couleur/z coul noir.png', '3_école_couleur/z coul orange.png', '3_école_couleur/z coul rose.png', '', '3_école_couleur/z coul rouge.png', '3_école_couleur/z coul vert.png', '3_école_couleur/z coul violet.png'],
+            animaux: ["2_animaux/animal.jpg", "2_animaux/loup.png", "2_animaux/agneau.png", "2_animaux/flaque.jpg", "2_animaux/ferme.jpg", '2_animaux/abeille.png', '2_animaux/aigle.png', '2_animaux/ane.png', '2_animaux/arbre.jpg', '2_animaux/arraignee.png', '2_animaux/autruche.png', '2_animaux/baleine.png', '2_animaux/bouc.png', '2_animaux/brebis.png', '2_animaux/chat.png', '2_animaux/cheval.png', '2_animaux/chevre.png', '2_animaux/chien.png', '2_animaux/cigogne.png', '2_animaux/cochon.png', '2_animaux/compagne.png', '2_animaux/coq.png', '2_animaux/crevette.png', '2_animaux/crocodile.png', '2_animaux/dromadaire.png', '2_animaux/ecureuil.png', '2_animaux/elephant.png', '2_animaux/escargot.png', '2_animaux/foret.png', '2_animaux/fourmi.png', '2_animaux/gazelle.png', '2_animaux/girafe.png', '2_animaux/gorille.png', '2_animaux/herisson.png', '2_animaux/hibou.png', '2_animaux/kangaurou.png', '2_animaux/koala.png', '2_animaux/lapin.png', '2_animaux/lion.png', '2_animaux/lizard.png', '2_animaux/mer.png', '2_animaux/montagne.jpg', '2_animaux/mouche.png', '2_animaux/moustique.jpg', '2_animaux/mouton.png', '2_animaux/oie.png', '2_animaux/oiseau.png', '2_animaux/oisillon.png', '2_animaux/ours.png', '2_animaux/papillon.png', '2_animaux/plage.png', '2_animaux/poisson.png', '2_animaux/poule.png', '2_animaux/poussin.png', '2_animaux/rat.png', '2_animaux/renard.png', '2_animaux/serpent.png', '2_animaux/singe.png', '2_animaux/souris.png', '2_animaux/taureau.png', '2_animaux/tigre.png', '2_animaux/tortue.png', '2_animaux/vache.png', '2_animaux/ver_de_terre.png', '2_animaux/zebre.png', "2_animaux/le champ de blé.jpg", "2_animaux/lac.png", "2_animaux/zoo.png", "2_animaux/fleur.png", "2_animaux/herbes.png", "2_animaux/coccinelle.png", "2_animaux/étable.png", "2_animaux/nid.png", "2_animaux/chenille.png", "2_animaux/révière.png", "2_animaux/sauterelle.png", "2_animaux/requin.png", "2_animaux/dauphin.png", "2_animaux/phoque.png", "2_animaux/grenouille.png"],
+            corps_hummain:['4_corps_hummain/barbe.png', '4_corps_hummain/cheveux.png', '4_corps_hummain/menton.png', '4_corps_hummain/coeur.png', '4_corps_hummain/cou.png', '4_corps_hummain/dent.png', '4_corps_hummain/dot.png', '4_corps_hummain/epaule.png', '4_corps_hummain/estomaque.png', '4_corps_hummain/euil.png', '4_corps_hummain/joue.png', '4_corps_hummain/la_langue.png', '4_corps_hummain/la_tete.png', '4_corps_hummain/la_ventre.jpg', '4_corps_hummain/le_visage.png', '4_corps_hummain/le_bras.png', '4_corps_hummain/le_coude.png', '4_corps_hummain/le_doigt.png', '4_corps_hummain/le_front.png', '4_corps_hummain/le_genou.png', '4_corps_hummain/le_nez.png', '4_corps_hummain/le_pied.png', '4_corps_hummain/les_jambes.png', '4_corps_hummain/levres.png', '4_corps_hummain/main.png', '4_corps_hummain/ongle.png', '4_corps_hummain/os.png', '4_corps_hummain/poitrine.png', '4_corps_hummain/sourcil.png', '4_corps_hummain/squelette.png', '4_corps_hummain/une_tresse.png' ,'4_corps_hummain/une_oreille.png', '4_corps_hummain/la_bouche.png'],
+            maison:  ['5_maison/placard.png', '5_maison/étagère.png','5_maison/terrasse.jpg', '5_maison/portail.png', '5_maison/appartement.png', '5_maison/couloir.png', '5_maison/cuisine.png', '5_maison/étage.png', '5_maison/jouets.png', '5_maison/le coin.png', '5_maison/plat.png', '5_maison/aiguille.png', '5_maison/armoire.png', '5_maison/baignoire.png', '5_maison/balai.png', '5_maison/boite.png', '5_maison/briquet.png', '5_maison/brosse.png', '5_maison/canape.png', '5_maison/chambre.jpg', '5_maison/cle.png', '5_maison/clou.png', '5_maison/coussin.png', '5_maison/echelle.png', '5_maison/escalier.png', '5_maison/etagere.png', '5_maison/fauteuil.png', '5_maison/horloge.png', '5_maison/immeuble.png', '5_maison/lampe.png', '5_maison/lit.png', '5_maison/maison.png', '5_maison/marteau.png', '5_maison/Miroir.png', '5_maison/mouchoir.png', '5_maison/mur.png', '5_maison/oreiller.png', '5_maison/peigne.png', '5_maison/peinture.png', '5_maison/pelle.png', '5_maison/piece.png', '5_maison/portefeuille.png', '5_maison/reveil.png', '5_maison/rideau.png', '5_maison/salle_de_bain.png', '5_maison/sol.png', '5_maison/tele.jfif', '5_maison/telephone.png', '5_maison/tiroir.jpg', '5_maison/tois.png', '5_maison/volet.png'],
+            metiers_et_professions:  ['9 metiers_et_professions/architecte.png', '9 metiers_et_professions/avocat.png', '9 metiers_et_professions/boucher1.jpg', '9 metiers_et_professions/coiffeur.png', '9 metiers_et_professions/couturiere.png', '9 metiers_et_professions/dentiste.jpg', '9 metiers_et_professions/electricien.png', '9 metiers_et_professions/enseignant.jpg', '9 metiers_et_professions/fermier.png', '9 metiers_et_professions/gardien.png', '9 metiers_et_professions/infirmiere.jpg', '9 metiers_et_professions/jardinier.jpg', '9 metiers_et_professions/journaliste.png', '9 metiers_et_professions/juge.png', '9 metiers_et_professions/femme_de_menage.png', '9 metiers_et_professions/patissiere.png', '9 metiers_et_professions/berger.png', '9 metiers_et_professions/caissier.png', '9 metiers_et_professions/directeur.jpg', '9 metiers_et_professions/libraire.png', '9 metiers_et_professions/marchand.png', '9 metiers_et_professions/maçon.png', '9 metiers_et_professions/maitresse.png', '9 metiers_et_professions/mecanicien.jpg', '9 metiers_et_professions/medecin.png', '9 metiers_et_professions/menuisier.jpg', '9 metiers_et_professions/musicien.png', '9 metiers_et_professions/pilote.jpg', '9 metiers_et_professions/pirate.png', '9 metiers_et_professions/reine.png', '9 metiers_et_professions/pompier.png', '9 metiers_et_professions/roi.png', '9 metiers_et_professions/serveur.jpg', '9 metiers_et_professions/soldat.jpg', '9 metiers_et_professions/sourciere.png', '9 metiers_et_professions/veterinaire.png', '9 metiers_et_professions/hotesse_de_l_air.png', '9 metiers_et_professions/policier.png', '9 metiers_et_professions/marin.png'],
+            transport:  ['10 transport/aeroport.png', '10 transport/ambulance.png', '10 transport/avion.png', '10 transport/barque.png', '10 transport/bateau.png', '10 transport/bus.png', '10 transport/chemin_de_fer.png', '10 transport/gare.png', '10 transport/helicoptere.png', '10 transport/moto.png', '10 transport/navire.png', '10 transport/parachute.jpg', '10 transport/port.png', '10 transport/poussette.png', '10 transport/roue.png', '10 transport/rue.png', '10 transport/train.png', '10 transport/velo.png', '10 transport/voiture.gif'],
+            ecole_et_coleur: ['3_école_couleur/alphabet.png' , '3_école_couleur/apprendre.png' , '3_école_couleur/ardoise.png' , '3_école_couleur/bureau.png' , '3_école_couleur/camarade.png' , '3_école_couleur/cartable 2.png' , '3_école_couleur/carte.png' , '3_école_couleur/chaise.png' , '3_école_couleur/ciseau.png' , '3_école_couleur/cloche.png' , '3_école_couleur/cole.png' , '3_école_couleur/cour de récréation.jpg' , '3_école_couleur/craie.png' , '3_école_couleur/crayon_(5).png' , '3_école_couleur/drapeau.png' , '3_école_couleur/école.jpg' , '3_école_couleur/eleve.png' , '3_école_couleur/fenêtre.png' , '3_école_couleur/crayon de couleur.png' , '3_école_couleur/La gomme.png' , '3_école_couleur/la trousse.jpg' , '3_école_couleur/nombre.png' , '3_école_couleur/papier.jpg' , '3_école_couleur/porte.png' , '3_école_couleur/punaise 2.png' , '3_école_couleur/règle.png' , '3_école_couleur/Stylo.jpg' , '3_école_couleur/tableau.png' , '3_école_couleur/tablier.png' , '3_école_couleur/taille crayon.png' , '3_école_couleur/z coul blanc.png' , '3_école_couleur/z coul bleu.png' , '3_école_couleur/z coul jaune.png' , '3_école_couleur/z coul marron.png' , '3_école_couleur/z coul noir.png' , '3_école_couleur/z coul orange.png' , '3_école_couleur/z coul rose.png' , '3_école_couleur/z coul rouge.png', '3_école_couleur/z coul violet.png' , '3_école_couleur/z coul vert.png'],
+            cuisine: ['6 cuisine et toilette/baignoire.png', '6 cuisine et toilette/bol.png', '6 cuisine et toilette/brosse_a_dents.png', '6 cuisine et toilette/casserole.png', '6 cuisine et toilette/congélateur.png', '6 cuisine et toilette/Corbeille.png', '6 cuisine et toilette/coupe ongles.png', '6 cuisine et toilette/couteau.png', '6 cuisine et toilette/dentifrice.png', '6 cuisine et toilette/eau.png', '6 cuisine et toilette/éponge.png', '6 cuisine et toilette/four.png', '6 cuisine et toilette/fourchette.png', '6 cuisine et toilette/gel_douche.png', '6 cuisine et toilette/lavabo.png', '6 cuisine et toilette/machine_a_laver.png', '6 cuisine et toilette/marmite.png', '6 cuisine et toilette/Moulin à legumes.jpg', '6 cuisine et toilette/panier.png', '6 cuisine et toilette/peigne.png', '6 cuisine et toilette/poèle.png', '6 cuisine et toilette/poubelle.png', '6 cuisine et toilette/réfrigérateur.png', '6 cuisine et toilette/robinet.png', '6 cuisine et toilette/savonette.png', '6 cuisine et toilette/seau.png', '6 cuisine et toilette/table.png', '6 cuisine et toilette/verre.png', '6 cuisine et toilette/y paille.jpeg', '6 cuisine et toilette/z assiette.png', '6 cuisine et toilette/z bouteille.png', '6 cuisine et toilette/z cuillère 1.png', '6 cuisine et toilette/z cuisinière.png', '6 cuisine et toilette/z serviette.png', '6 cuisine et toilette/z soupiere.png'],
+            préposition_de_lieu:['13_les_prépositions_de_lieu/uu après.jpg', '13_les_prépositions_de_lieu/uu avant.jpg', '13_les_prépositions_de_lieu/y à coté de.jpg', '13_les_prépositions_de_lieu/y à droite de .jpg ','13_les_prépositions_de_lieu/y à gauche.jpg ', '13_les_prépositions_de_lieu/y au dessus.jpg ', '13_les_prépositions_de_lieu/y au milieu de .png ', '13_les_prépositions_de_lieu/y dans.jpg' , '13_les_prépositions_de_lieu/y derrière.jpg' , '13_les_prépositions_de_lieu/y dessous.jpg' , '13_les_prépositions_de_lieu/y devant.jpg ', '13_les_prépositions_de_lieu/y en face de.jpg ', '13_les_prépositions_de_lieu/y entre_out.jpg' ,'13_les_prépositions_de_lieu/y pendant.png'],
+            lieu:[
+'12 les lieux/aéroport.png',
+'12 les lieux/bibliotheque.jpg',
+'12 les lieux/boulanger.jpg',
+'12 les lieux/boutique.png',
+'12 les lieux/cimetière.jpg',
+'12 les lieux/épicier.png',
+'12 les lieux/ferme.png',
+'12 les lieux/hopital.png',
+'12 les lieux/hotel.png',
+'12 les lieux/librerie.png',
+'12 les lieux/magasin.png',
+'12 les lieux/marcher.png',
+'12 les lieux/mosqué.jpg',
+'12 les lieux/musée.png',
+'12 les lieux/passage piéton.png',
+'12 les lieux/pharmacie.jpg',
+'12 les lieux/port.png',
+'12 les lieux/prison.png',
+'12 les lieux/quartier.png',
+'12 les lieux/restaurant.png',
+'12 les lieux/rue.png',
+'12 les lieux/salon de coiffure.jpg',
+'12 les lieux/stade.png',
+'12 les lieux/théatre.jpg',
+'12 les lieux/trotoir.png',
+'12 les lieux/usine.png'],
+
+            famille:[''],
+            vetement: ['10 vetement/bague.png', '10 vetement/bonnet.png', '10 vetement/bottes.png', '10 vetement/bracelet.jpg', '10 vetement/boucles_d_oreilles.png', '10 vetement/casquette.png', '10 vetement/ceinture.jpg', '10 vetement/chapeau.jpg', '10 vetement/chaussette.png', '10 vetement/chaussure.png', '10 vetement/chemise.png', '10 vetement/colier.png', '10 vetement/cravate.png', '10 vetement/foulard.png', '10 vetement/gants.png', '10 vetement/jupe.png', '10 vetement/lunette.png', '10 vetement/maillot.png', '10 vetement/manteau.png', '10 vetement/pantalon.png', '10 vetement/pantoufle.png', '10 vetement/poche.png', '10 vetement/pull.png', '10 vetement/pyjama.png', '10 vetement/robe.png', '10 vetement/tee_shirt.png', '10 vetement/echarpe.png']
+        };
+
+
+        var toutesLesImages = [];
+        var imagesRestantes = [];
+        var score = 0;
+        var scoreCible = 10;
+        var isGameOver = false;
+        var startTime;
+
+        function initialiserImages(theme) {
+            toutesLesImages = themes[theme].slice();
+            shuffleArray(toutesLesImages);
+            imagesRestantes = toutesLesImages.slice();
+        }
+
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+
+        function afficherImageSuivante() {
+            if (imagesRestantes.length === 0) {
+                finDuJeu();
+                return;
+            }
+            var imageSelectionnee = imagesRestantes.pop();
+            document.getElementById('image').src = imageSelectionnee;
+        }
+
+        /*function finDuJeu() {
+            if (isGameOver) return; // Empêche plusieurs game-overs
+            isGameOver = true;
+
+            // Cachez l'image
+            document.getElementById('imageContainer').style.display = 'none';
+
+            // Afficher félicitations
+            document.getElementById('congratulations').style.display = 'block';
+
+            // Afficher le score final
+            document.getElementById('finalScore').style.display = 'block';
+            document.getElementById('finalScoreValue').innerText = score;
+
+            // Stop confetti et animations
+            startConfetti();
+        }*/
+        function finDuJeu() {
+    if (isGameOver) return; // Empêche plusieurs game-overs
+    isGameOver = true;
+
+    // Cachez l'image
+    document.getElementById('imageContainer').style.display = 'none';
+
+    // Afficher félicitations
+    document.getElementById('congratulations').style.display = 'block';
+
+    // Calculer le temps final
+    var now = new Date();
+    var elapsed = Math.floor((now - startTime) / 1000); // Temps écoulé en secondes
+    var minutes = Math.floor(elapsed / 60);
+    var seconds = elapsed % 60;
+    var tempsFinal = `${String(minutes).padStart(2, '0')} min ${String(seconds).padStart(2, '0')} sec`;
+
+    // Afficher le score final
+    document.getElementById('finalScore').style.display = 'block';
+    document.getElementById('finalScore').innerHTML = `
+        Votre score final : <span id="finalScoreValue">${score}</span><br>
+        Temps écoulé : <span id="finalTime">${tempsFinal}</span>
+    `;
+
+    // Démarrer les confettis et animations
+    startConfetti();
+}
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var themeSelectionne = urlParams.get('theme');
+            startTime = new Date(); // Initialiser l'horloge
+
+            if (themeSelectionne) {
+                initialiserImages(themeSelectionne);
+                document.getElementById('afficherImageBtn').disabled = false;
+                afficherImageSuivanteAvecDelai();
+            }
+
+            // Mettre à jour l'horloge
+            setInterval(updateClock, 1000);
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'c') {
+                    incrementerScore();
+                }
+            });
+        });
+
+        function updateClock() {
+            var now = new Date();
+            var elapsed = Math.floor((now - startTime) / 1000); // Temps écoulé en secondes
+            var minutes = Math.floor(elapsed / 60);
+            var seconds = elapsed % 60;
+            document.getElementById('clock').innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function incrementerScore() {
+            if (isGameOver) return; // Empêcher d'ajouter des points après le game over
+            score++;
+            document.getElementById('score').innerText = score;
+        }
+
+        function afficherImageSuivanteAvecDelai() {
+            afficherImageSuivante();
+            setTimeout(afficherImageSuivanteAvecDelai, 1000); // Afficher une image toutes les secondes
+        }
+
+        // Confetti animation (reste inchangé)
+        let W = window.innerWidth;
+        let H = window.innerHeight;
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+        const maxConfettis = 150;
+        const particles = [];
+        const possibleColors = [
+            "DodgerBlue", "OliveDrab", "Gold", "Pink", "SlateBlue", 
+            "LightBlue", "Gold", "Violet", "PaleGreen", "SteelBlue", 
+            "SandyBrown", "Chocolate", "Crimson"
+        ];
+
+        function randomFromTo(from, to) {
+            return Math.floor(Math.random() * (to - from + 1) + from);
+        }
+
+        function confettiParticle() {
+            this.x = Math.random() * W;
+            this.y = Math.random() * H - H;
+            this.r = randomFromTo(11, 33);
+            this.d = Math.random() * maxConfettis + 11;
+            this.color = possibleColors[Math.floor(Math.random() * possibleColors.length)];
+            this.tilt = Math.floor(Math.random() * 33) - 11;
+            this.tiltAngleIncremental = Math.random() * 0.07 + 0.05;
+            this.tiltAngle = 0;
+
+            this.draw = function() {
+                context.beginPath();
+                context.lineWidth = this.r / 2;
+                context.strokeStyle = this.color;
+                context.moveTo(this.x + this.tilt + this.r / 3, this.y);
+                context.lineTo(this.x + this.tilt, this.y + this.tilt + this.r / 5);
+                return context.stroke();
+            };
+        }
+
+        function startConfetti() {
+            for (var i = 0; i < maxConfettis; i++) {
+                particles.push(new confettiParticle());
+            }
+
+            function Draw() {
+                const results = [];
+                requestAnimationFrame(Draw);
+                context.clearRect(0, 0, W, window.innerHeight);
+
+                for (var i = 0; i < maxConfettis; i++) {
+                    results.push(particles[i].draw());
+                }
+
+                let particle = {};
+                let remainingFlakes = 0;
+                for (var i = 0; i < maxConfettis; i++) {
+                    particle = particles[i];
+                    particle.tiltAngle += particle.tiltAngleIncremental;
+                    particle.y += (Math.cos(particle.d) + 3 + particle.r / 2) / 2;
+                    particle.tilt = Math.sin(particle.tiltAngle - i / 3) * 15;
+
+                    if (particle.y <= H) remainingFlakes++;
+
+                    if (particle.x > W + 30 || particle.x < -30 || particle.y > H) {
+                        particle.x = Math.random() * W;
+                        particle.y = -30;
+                        particle.tilt = Math.floor(Math.random() * 10) - 20;
+                    }
+                }
+                return results;
+            }
+            Draw();
+        }
+// Initialisation des dimensions du canevas
+canvas.width = W;
+canvas.height = H;
+        window.addEventListener("resize", function() {
+            W = window.innerWidth;
+            H = window.innerHeight;
+            canvas.width = W;
+            canvas.height = H;
+        });
+    </script>
+</body>
+</html>

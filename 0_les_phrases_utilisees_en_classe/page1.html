@@ -1,0 +1,150 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #theme {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        img {
+            max-width: 70%;
+            max-height: 50vh;
+            margin-top: 20px;
+        }
+
+        button {
+            margin-top: 10px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <h2>Choisissez un thème :</h2>
+
+     <form id="theme" class="flex-container" method="get"  action="page3.html">
+        <input type="radio" id="theme1" name="theme" value="nature">
+        <label for="theme1"><img id="image1" class="img" src="image/img9.png" alt="Image 1" class="small-input"></label><br>
+        <input type="radio" id="theme2" name="theme" value="animaux">
+        <label for="theme2"><img id="image2" class="img" src="image/img8.png" alt="Image 2" class="small-input"></label><br>
+        <input type="radio" id="theme3" name="theme" value="ville">
+        <label for="theme3"><img id="image3" class="img" src="image/img7.png" alt="Image 3" class="small-input"></label><br>
+        <input type="submit" value="Envoyer">
+     </form >
+
+    <br><br>
+
+     <img id="image" src="" alt="Image">
+    <button id="afficherImageBtn" onclick="afficherImageSuivante()"><img id="image" src="" alt="Image"></button>
+
+    <script>
+        var themes = {
+            nature: ['img11.png', 'img22.png', 'img3.png'],
+            animaux: ['image1.png', 'image2.png', 'image3.png', 'image4.png', 'image5.png', 'image6.png', 'image7.png'],
+            ville: ['img101.png', 'img102.png', 'img103.png', 'img104.png', 'img105.png']
+        };
+
+        var toutesLesImages = [];
+        var imagesRestantes = [];
+
+        function initialiserImages(theme) {
+            toutesLesImages = themes[theme].slice();  // Copier le tableau du thème sélectionné
+            shuffleArray(toutesLesImages);
+            imagesRestantes = toutesLesImages.slice();  // Copier le tableau original
+        }
+
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+
+        function afficherImageSuivante() {
+            if (imagesRestantes.length === 0) {
+                // Si toutes les images ont été affichées, désactiver le bouton
+                document.getElementById('afficherImageBtn').disabled = true;
+                return;
+            }
+
+            var imageSelectionnee = imagesRestantes.pop();
+            document.getElementById('image').src = imageSelectionnee;
+        }
+
+        document.querySelectorAll('input[name="theme"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                initialiserImages(this.value);
+                document.getElementById('afficherImageBtn').disabled = false;
+                afficherImageSuivante();  // Afficher la première image dès que le thème est sélectionné
+            });
+        });
+    </script>
+</body>
+</html> -->
+<!-- page1.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Theme Selection</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #theme {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        img {
+            max-width: 70%;
+            max-height: 50vh;
+            margin-top: 20px;
+        }
+
+        button {
+            margin-top: 10px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <form id="theme" method="get" action="page2.html">
+        <input type="radio" id="theme1" name="theme" value="les_phrases_utilisees_en_classe">
+        <label for="theme1"><img id="image1" class="img" src="1.png" alt="les_phrases_utilisees_en_classe"></label>
+
+       
+
+
+
+        <input type="submit" value="Envoyer">
+    </form>
+</body>
+</html>

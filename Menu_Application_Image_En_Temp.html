@@ -1,0 +1,312 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #theme {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        img {
+            max-width: 70%;
+            max-height: 50vh;
+            margin-top: 20px;
+        }
+
+        button {
+            margin-top: 10px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <h2>Choisissez un thème :</h2>
+
+     <form id="theme" class="flex-container" method="get"  action="page3.html">
+        <input type="radio" id="theme1" name="theme" value="nature">
+        <label for="theme1"><img id="image1" class="img" src="image/img9.png" alt="Image 1" class="small-input"></label><br>
+        <input type="radio" id="theme2" name="theme" value="animaux">
+        <label for="theme2"><img id="image2" class="img" src="image/img8.png" alt="Image 2" class="small-input"></label><br>
+        <input type="radio" id="theme3" name="theme" value="ville">
+        <label for="theme3"><img id="image3" class="img" src="image/img7.png" alt="Image 3" class="small-input"></label><br>
+        <input type="submit" value="Envoyer">
+     </form >
+
+    <br><br>
+
+     <img id="image" src="" alt="Image">
+    <button id="afficherImageBtn" onclick="afficherImageSuivante()"><img id="image" src="" alt="Image"></button>
+
+    <script>
+        var themes = {
+            nature: ['img11.png', 'img22.png', 'img3.png'],
+            animaux: ['image1.png', 'image2.png', 'image3.png', 'image4.png', 'image5.png', 'image6.png', 'image7.png'],
+            ville: ['img101.png', 'img102.png', 'img103.png', 'img104.png', 'img105.png']
+        };
+
+        var toutesLesImages = [];
+        var imagesRestantes = [];
+
+        function initialiserImages(theme) {
+            toutesLesImages = themes[theme].slice();  // Copier le tableau du thème sélectionné
+            shuffleArray(toutesLesImages);
+            imagesRestantes = toutesLesImages.slice();  // Copier le tableau original
+        }
+
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+
+        function afficherImageSuivante() {
+            if (imagesRestantes.length === 0) {
+                // Si toutes les images ont été affichées, désactiver le bouton
+                document.getElementById('afficherImageBtn').disabled = true;
+                return;
+            }
+
+            var imageSelectionnee = imagesRestantes.pop();
+            document.getElementById('image').src = imageSelectionnee;
+        }
+
+        document.querySelectorAll('input[name="theme"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                initialiserImages(this.value);
+                document.getElementById('afficherImageBtn').disabled = false;
+                afficherImageSuivante();  // Afficher la première image dès que le thème est sélectionné
+            });
+        });
+    </script>
+</body>
+</html> -->
+<!-- page1.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Theme Selection</title>
+    <style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #eff306; /* Couleur de fond du corps */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 50px auto;
+    background-color: #e18535; /* Couleur de fond du conteneur */
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+p {
+    color: #666;
+    text-align: center;
+}
+
+form {
+    text-align: center;
+}
+
+.theme-option {
+    display: inline-block;
+    margin: 10px;
+}
+
+.theme-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.theme-option:hover .theme-image {
+    transform: scale(1.1);
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+label {
+    cursor: pointer;
+}
+
+input[type="submit"] {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+
+
+.theme-option {
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+}
+
+.theme-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.theme-option label {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column; /* Afficher le contenu en colonne */
+    align-items: center; /* Centrer le contenu horizontalement */
+    text-align: center; /* Centrer le texte */
+}
+
+.theme-option .theme-name {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.theme-option:hover .theme-image {
+    transform: scale(1.1);
+}
+
+
+        
+    </style>
+
+
+</head>
+<!--<body>
+    <form id="theme" method="get" action="page3.html">
+        <input type="radio" id="theme1" name="theme" value="nature">
+        <label for="theme1"><img id="image1" class="img" src="image/img9.png" alt="Nature"></label>
+
+        <input type="radio" id="theme2" name="theme" value="animaux">
+        <label for="theme2"><img id="image2" class="img" src="image/img8.png" alt="Animaux"></label>
+
+        <input type="radio" id="theme3" name="theme" value="ville">
+        <label for="theme3"><img id="image3" class="img" src="image/img7.png" alt="Ville"></label>
+
+        <input type="submit" value="Envoyer">
+    </form>
+</body>-->
+
+<body>
+    <div class="container">
+        <h1>Bienvenue sur Votre Application</h1>
+        <p>Choisissez un thème pour commencer</p>
+
+        <form id="theme" method="get" action="Application_Image_En_Temp.html"> 
+            <div class="theme-option">
+                <input type="radio" id="theme1" name="theme" value="maison">
+                <label for="theme1"><img id="image5" class="theme-image" src="5-maison.png" alt="maison"><span class="theme-name">maison</span></label>
+            </div>
+            <div class="theme-option">
+                <input type="radio" id="theme11" name="theme" value="Alimentation">
+                <label for="theme11"><img id="image10" class="theme-image" src="8_alimentation.png" alt="alimentation"><span class="theme-name">Alimentation</span></label>
+            </div>   
+            <div class="theme-option">
+                <input type="radio" id="theme2" name="theme" value="corps_hummain">
+                <label for="theme2"><img id="image4" class="theme-image" src="4_corps.jpg" alt="corps_hummain"><span class="theme-name">corps hummain</span></label>
+             </div> 
+            <div class="theme-option">
+                <input type="radio" id="theme3" name="theme" value="adjectifs_qualificatifs">
+                <label for="theme3"><img class="theme-image" src="1_ajectifs qualificatifs.png" alt="Nature"><span class="theme-name">ajectifs qualificatifs</span></label>
+            </div>
+             <div class="theme-option">
+                <input type="radio" id="theme4" name="theme" value="famille">
+                <label for="theme4"><img class="theme-image" src="7_famille et gents.jpg" alt="Ville"><span class="theme-name">famille et gents.jpg</span></label>
+            </div>
+
+            <div class="theme-option">
+                <input type="radio" id="theme5" name="theme" value="animaux">
+                <label for="theme5"><img class="theme-image" src="2_animaux.png" alt="Animaux"><span class="theme-name">Animaux</span></label>
+            </div>
+   
+            <div class="theme-option">
+                <input type="radio" id="theme6" name="theme" value="cuisine">
+                <label for="theme6"><img class="theme-image" src="6_cuisine.png" alt="Ville"><span class="theme-name">cuisine</span></label>
+            </div>
+            <div class="theme-option">
+                <input type="radio" id="theme7" name="theme" value="metiers_et_professions">
+                <label for="theme7"><img id="image6" class="theme-image" src="9_métiers et professions.png" alt="metiers_et_professions"><span class="theme-name"> metier et professions</span></label>
+            </div>
+
+            <div class="theme-option">
+            <input type="radio" id="theme8" name="theme" value="transport">
+            <label for="theme8"><img id="image7" class="theme-image" src="10_transport.png" alt="transport"><span class="theme-name">transport</span></label>
+</div>
+
+<div class="theme-option">
+            <input type="radio" id="theme9" name="theme" value="vetement">
+            <label for="theme9"><img id="image6" class="theme-image" src="10_vetements.png" alt="Vtement"><span class="theme-name">vêtements</span></label>
+</div>
+<div class="theme-option">
+    <input type="radio" id="theme10" name="theme" value="lieu">
+    <label for="theme10"><img id="image6" class="theme-image" src="13_prépositions de lieu.jpg" alt="Vtement"><span class="theme-name">lieu</span></label>
+</div>
+<div class="theme-option">
+    <input type="radio" id="theme13" name="theme" value="préposition_de_lieu">
+    <label for="theme13"><img id="image6" class="theme-image" src="13_prépositions de lieu.jpg" alt="Vtement"><span class="theme-name">préposition_de_lieu</span></label>
+</div>
+<div class="theme-option">
+    <input type="radio" id="theme12" name="theme" value="ecole_et_coleur">
+    <label for="theme12"><img id="image6" class="theme-image" src="3_ecole_couleur.jpg" alt="ecole_et_coleur"><span class="theme-name">école et coleur</span></label>
+</div>
+
+<div>
+    <input type="submit" value="Commencer">
+</div>
+
+            
+        </form>
+
+
+    </div>
+
+</body>
+</html>
+
+

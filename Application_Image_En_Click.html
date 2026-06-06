@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jeux de Vocabulaire – Unité Bghadda</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sky:#f0f7ff;--white:#ffffff;--ink:#1a1f36;--muted:#6b7280;
+  --green:#10b981;--red:#ef4444;--blue:#3b82f6;--gold:#f59e0b;
+  --shadow:0 4px 20px rgba(0,0,0,0.08);--shadow-md:0 8px 40px rgba(0,0,0,0.13);
+}
+body{font-family:'Nunito',sans-serif;background:var(--sky);min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;overflow-x:hidden;position:relative;}
+
+.bg-shapes{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:0.18}
+.b1{width:450px;height:450px;background:#a78bfa;top:-80px;left:-100px;animation:d1 14s ease-in-out infinite}
+.b2{width:380px;height:380px;background:#6ee7b7;bottom:-80px;right:-80px;animation:d2 18s ease-in-out infinite}
+.b3{width:300px;height:300px;background:#fcd34d;top:40%;right:0;animation:d3 16s ease-in-out infinite}
+@keyframes d1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,-30px)}}
+@keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,25px)}}
+@keyframes d3{0%,100%{transform:translate(0,0)}50%{transform:translate(-25px,35px)}}
+
+.school-doodles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.sdoodle{position:absolute;animation:sdFloat var(--d,5s) ease-in-out infinite var(--del,0s);opacity:0.5}
+@keyframes sdFloat{0%,100%{transform:translateY(0) rotate(var(--r0,0deg))}50%{transform:translateY(-18px) rotate(var(--r1,8deg))}}
+
+/* ══════════════════════════════════════
+   READY SCREEN — MEGA REDESIGN
+══════════════════════════════════════ */
+.ready-screen{
+  position:fixed;inset:0;z-index:500;overflow:hidden;
+  background:linear-gradient(170deg,#0a0f2e 0%,#0d1b4b 30%,#0f2d6b 65%,#1a3a8a 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:0;
+}
+.ready-screen.hiding{animation:readyHide 0.7s cubic-bezier(0.4,0,0.6,1) both}
+@keyframes readyHide{0%{opacity:1;transform:scale(1) translateY(0)}100%{opacity:0;transform:scale(1.08) translateY(-30px)}}
+
+/* ─── ANIMATED SKY BACKGROUND ─── */
+.ready-sky{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+
+/* twinkling stars */
+.rstar{position:absolute;background:#fff;border-radius:50%;opacity:0;
+  animation:rTwink var(--d,3s) ease-in-out infinite var(--del,0s)}
+@keyframes rTwink{0%,100%{opacity:0;transform:scale(0.3)}45%,55%{opacity:0.9;transform:scale(1)}}
+
+/* shooting stars */
+.shoot-star{position:absolute;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,rgba(255,255,255,0.9),transparent);
+  animation:shoot var(--sd,2.5s) ease-in var(--sdel,0s) infinite;
+  opacity:0;}
+@keyframes shoot{0%{opacity:0;transform:translateX(0) translateY(0) rotate(-25deg);width:0}
+  5%{opacity:1;width:80px}
+  40%{opacity:0.8;transform:translateX(280px) translateY(100px) rotate(-25deg);width:120px}
+  45%,100%{opacity:0;transform:translateX(350px) translateY(130px) rotate(-25deg)}}
+
+/* aurora at bottom */
+.ready-aurora{position:absolute;bottom:0;left:0;width:100%;height:220px;pointer-events:none;
+  background:linear-gradient(180deg,transparent 0%,rgba(16,185,129,0.08) 40%,rgba(59,130,246,0.12) 70%,rgba(124,58,237,0.1) 100%);
+  filter:blur(20px);}
+
+/* floating bokeh orbs */
+.bokeh{position:absolute;border-radius:50%;pointer-events:none;
+  animation:bokehFloat var(--bd,8s) ease-in-out infinite var(--bdel,0s);}
+@keyframes bokehFloat{0%,100%{transform:translateY(0) scale(1);opacity:var(--bo,0.15)}
+  50%{transform:translateY(-30px) scale(1.1);opacity:calc(var(--bo,0.15)*1.6)}}
+
+/* ─── THEME PILL ─── */
+.ready-theme-pill{
+  position:relative;z-index:2;
+  background:rgba(255,255,255,0.1);
+  border:2px solid rgba(255,255,255,0.25);
+  backdrop-filter:blur(12px);
+  border-radius:50px;padding:10px 28px;
+  font-family:'Fredoka One',cursive;font-size:1.05rem;
+  color:#fff;letter-spacing:0.04em;
+  display:flex;align-items:center;gap:10px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.15);
+  animation:pillDrop 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
+}
+@keyframes pillDrop{0%{opacity:0;transform:translateY(-30px) scale(0.8)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.ready-theme-pill .pill-dot{width:10px;height:10px;border-radius:50%;background:#fbbf24;
+  box-shadow:0 0 8px #fbbf24;animation:pillDotPulse 1.5s ease-in-out infinite}
+@keyframes pillDotPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:0.7}}
+
+/* ─── SCENE CONTAINER ─── */
+.ready-scene{
+  position:relative;z-index:2;
+  display:flex;align-items:flex-end;
+  justify-content:center;
+  gap:0;
+  margin-top:4px;
+  width:100%;max-width:760px;
+  padding:0 16px;
+}
+
+/* ─── GROUND / PODIUM ─── */
+.ready-ground{
+  position:absolute;bottom:0;left:20px;right:20px;height:28px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03));
+  border-radius:50% 50% 0 0/100% 100% 0 0;
+  border-top:2px solid rgba(255,255,255,0.12);
+}
+
+/* ─── STUDENT SVG ─── */
+.ready-mascot-wrap{
+  position:relative;z-index:5;
+  flex-shrink:0;
+  animation:studentDrop 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
+}
+@keyframes studentDrop{0%{opacity:0;transform:translateY(-60px) scale(0.6)}
+  70%{transform:translateY(8px) scale(1.04)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.ready-mascot-wrap .student{
+  animation:studentBob 3.5s ease-in-out infinite 1.5s;
+}
+@keyframes studentBob{
+  0%,100%{transform:translateY(0)}
+  40%{transform:translateY(-12px)}
+  70%{transform:translateY(-6px)}
+}
+
+.ready-mascot-svg{
+  width:260px;height:340px;
+  filter:drop-shadow(0 20px 40px rgba(0,0,0,0.45));
+  animation:studentBob 3s ease-in-out infinite;
+}
+@keyframes studentBob{
+  0%,100%{transform:translateY(0) rotate(-0.5deg)}
+  30%{transform:translateY(-14px) rotate(0.5deg)}
+  60%{transform:translateY(-8px) rotate(-0.3deg)}
+}
+/* GSAP student sizing */
+.student{width:360px}
+.student svg#student{
+  filter:drop-shadow(0 20px 48px rgba(0,0,0,0.5));
+  overflow:visible;
+}
+
+/* glow circle behind student */
+.student-glow{
+  position:absolute;
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(251,191,36,0.2) 0%,rgba(59,130,246,0.08) 60%,transparent 75%);
+  bottom:20px;left:50%;transform:translateX(-50%);
+  z-index:1;
+  animation:glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse{0%,100%{transform:translateX(-50%) scale(1);opacity:0.7}
+  50%{transform:translateX(-50%) scale(1.15);opacity:1}}
+
+/* orbit ring */
+.orbit-ring{position:absolute;inset:-40px;z-index:4;
+  animation:orbitSpin 10s linear infinite}
+@keyframes orbitSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.orbit-item{position:absolute;font-size:24px;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  animation:orbitCounter 10s linear infinite;}
+@keyframes orbitCounter{from{transform:rotate(0)}to{transform:rotate(-360deg)}}
+.orbit-item:nth-child(1){top:-4px;left:50%;transform-origin:0 0;margin-left:-12px}
+.orbit-item:nth-child(2){top:50%;right:-8px;margin-top:-12px}
+.orbit-item:nth-child(3){bottom:-4px;left:50%;margin-left:-12px}
+.orbit-item:nth-child(4){top:50%;left:-8px;margin-top:-12px}
+
+/* ─── FLOATING ITEMS AROUND STUDENT ─── */
+.float-item{
+  position:absolute;font-size:28px;z-index:6;
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,0.35));
+  animation:floatBob var(--fd,4s) ease-in-out infinite var(--fdel,0s);
+}
+@keyframes floatBob{0%,100%{transform:translateY(0) rotate(var(--fr0,-5deg)) scale(1)}
+  50%{transform:translateY(-18px) rotate(var(--fr1,5deg)) scale(1.08)}}
+
+/* ─── SPEECH BUBBLE ─── */
+.ready-bubble{
+  position:relative;z-index:6;
+  background:#fff;
+  border-radius:32px;border-bottom-left-radius:6px;
+  padding:18px 22px;
+  max-width:240px;
+  min-width:200px;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.35),
+             0 0 0 3px rgba(255,255,255,0.1),
+             inset 0 1px 0 rgba(255,255,255,0.6);
+  animation:bubblePop 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.5s both;
+  align-self:center;
+  margin-bottom:40px;
+  flex-shrink:0;
+}
+@keyframes bubblePop{0%{opacity:0;transform:scale(0) rotate(-8deg)}
+  70%{transform:scale(1.08) rotate(2deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+
+.bubble-tail{
+  position:absolute;bottom:-18px;left:24px;
+  width:0;height:0;
+  border-left:10px solid transparent;
+  border-right:6px solid transparent;
+  border-top:20px solid #fff;
+  filter:drop-shadow(0 6px 4px rgba(0,0,0,0.1));
+}
+
+.ready-bubble h2{
+  font-family:'Fredoka One',cursive;font-size:1.45rem;line-height:1.15;
+  background:linear-gradient(135deg,#1e40af,#7c3aed);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:8px;
+}
+.ready-bubble p{
+  font-size:0.85rem;font-weight:700;color:#4b5563;line-height:1.55;
+}
+
+/* animated dots */
+.ready-dots{display:flex;gap:6px;margin-top:10px;justify-content:center}
+.rdot{width:9px;height:9px;border-radius:50%;animation:dotDance 1.4s ease-in-out infinite}
+.rdot:nth-child(1){background:#3b82f6;animation-delay:0s}
+.rdot:nth-child(2){background:#8b5cf6;animation-delay:0.2s}
+.rdot:nth-child(3){background:#ec4899;animation-delay:0.4s}
+@keyframes dotDance{0%,100%{transform:scale(1) translateY(0)}
+  40%{transform:scale(1.5) translateY(-5px)}}
+
+/* ─── BOTTOM CTA AREA ─── */
+.ready-cta{
+  position:relative;z-index:10;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  margin-top:4px;
+  animation:ctaRise 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.75s both;
+}
+@keyframes ctaRise{0%{opacity:0;transform:translateY(40px)}100%{opacity:1;transform:translateY(0)}}
+
+/* start button — BIG & JUICY */
+.ready-btn{
+  position:relative;overflow:hidden;
+  font-family:'Fredoka One',cursive;font-size:1.35rem;color:#1a0a00;
+  background:linear-gradient(145deg,#fde68a 0%,#fbbf24 35%,#f59e0b 65%,#d97706 100%);
+  border:none;border-radius:70px;
+  padding:18px 56px;
+  cursor:pointer;
+  box-shadow:0 8px 0 #92400e,
+             0 16px 40px rgba(245,158,11,0.5),
+             inset 0 2px 0 rgba(255,255,255,0.4);
+  transition:all 0.15s;
+  display:flex;align-items:center;gap:14px;
+  letter-spacing:0.04em;
+  text-shadow:0 1px 0 rgba(255,255,255,0.4);
+}
+.ready-btn::before{
+  content:'';position:absolute;top:0;left:-80%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);
+  transform:skewX(-20deg);
+  animation:btnShimmer 2.2s ease-in-out infinite;
+}
+@keyframes btnShimmer{0%,100%{left:-80%}60%{left:150%}}
+.ready-btn:hover{transform:translateY(-6px);
+  box-shadow:0 14px 0 #92400e,0 24px 50px rgba(245,158,11,0.65),inset 0 2px 0 rgba(255,255,255,0.4)}
+.ready-btn:active{transform:translateY(3px);box-shadow:0 4px 0 #92400e}
+.ready-btn .btn-rocket{font-size:1.6rem;display:inline-block;animation:rocketJump 1.3s ease-in-out infinite}
+@keyframes rocketJump{0%,100%{transform:translateY(0) rotate(-10deg)}
+  50%{transform:translateY(-8px) rotate(5deg)}}
+
+/* image count badge */
+.ready-count{
+  font-family:'Fredoka One',cursive;font-size:0.9rem;
+  color:rgba(255,255,255,0.6);
+  letter-spacing:0.05em;
+  display:flex;align-items:center;gap:8px;
+}
+.ready-count::before,.ready-count::after{
+  content:'';width:30px;height:1.5px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3));
+}
+.ready-count::after{background:linear-gradient(90deg,rgba(255,255,255,0.3),transparent)}
+
+@keyframes readyEntrance{0%{opacity:0;transform:translateY(20px) scale(0.9)}100%{opacity:1;transform:translateY(0) scale(1)}}
+
+/* ══════════════════════════════════════
+   REACTION OVERLAYS (left / right)
+══════════════════════════════════════ */
+.reaction{
+  position:fixed;top:50%;z-index:50;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  transform:translateY(-50%);
+}
+.reaction.left{left:-20px}
+.reaction.right{right:-20px}
+
+.reaction-face{
+  width:110px;height:110px;
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,0.25));
+}
+
+.reaction-label{
+  font-family:'Fredoka One',cursive;font-size:1rem;
+  border-radius:20px;padding:5px 14px;
+  white-space:nowrap;
+  box-shadow:0 4px 14px rgba(0,0,0,0.15);
+}
+.reaction.happy .reaction-label{background:#d1fae5;color:#065f46}
+.reaction.angry .reaction-label{background:#fee2e2;color:#991b1b}
+
+/* Entrance/exit animations */
+.reaction.show-left{animation:reactLeft 0.65s cubic-bezier(0.34,1.56,0.64,1) both}
+.reaction.show-right{animation:reactRight 0.65s cubic-bezier(0.34,1.56,0.64,1) both}
+@keyframes reactLeft{
+  0%{opacity:0;transform:translateY(-50%) translateX(-120px) scale(0.4)}
+  70%{transform:translateY(-50%) translateX(12px) scale(1.06)}
+  100%{opacity:1;transform:translateY(-50%) translateX(0) scale(1)}
+}
+@keyframes reactRight{
+  0%{opacity:0;transform:translateY(-50%) translateX(120px) scale(0.4)}
+  70%{transform:translateY(-50%) translateX(-12px) scale(1.06)}
+  100%{opacity:1;transform:translateY(-50%) translateX(0) scale(1)}
+}
+.reaction.hide{animation:reactHide 0.4s ease-in both}
+@keyframes reactHide{0%{opacity:1;transform:translateY(-50%) scale(1)}100%{opacity:0;transform:translateY(-50%) scale(0.5)}}
+
+/* bounce on face */
+.reaction.show-left .reaction-face,.reaction.show-right .reaction-face{
+  animation:faceBounce 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.25s both;
+}
+@keyframes faceBounce{0%{transform:scale(0.5) rotate(-15deg)}70%{transform:scale(1.15) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+
+/* ══════════════════════════════════════
+   TOP BAR
+══════════════════════════════════════ */
+.topbar{position:relative;z-index:10;width:100%;
+  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;box-shadow:0 4px 20px rgba(30,58,138,0.35);
+  border-bottom:4px solid #FFD93D;}
+.topbar-ticker{position:absolute;bottom:-22px;left:0;width:200%;height:20px;
+  display:flex;align-items:center;gap:18px;
+  animation:tickerScroll 18s linear infinite;pointer-events:none;}
+.tick-item{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:800;
+  color:#1e3a8a;white-space:nowrap;opacity:0.6}
+@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.back-btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;
+  font-size:0.85rem;font-weight:800;color:rgba(255,255,255,0.9);
+  background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.3);
+  border-radius:30px;padding:7px 16px;transition:all 0.2s;backdrop-filter:blur(8px);
+  box-shadow:0 3px 0 rgba(0,0,0,0.2);}
+.back-btn:hover{background:rgba(255,255,255,0.25);color:#fff;transform:translateY(-2px)}
+.topbar-center{display:flex;flex-direction:column;align-items:center}
+.topbar-school{font-size:0.66rem;color:rgba(255,255,255,0.55);font-weight:700;letter-spacing:0.06em;text-transform:uppercase}
+.topbar-theme{font-family:'Fredoka One',cursive;font-size:1rem;color:#fff;letter-spacing:0.03em;display:flex;align-items:center;gap:6px}
+.topbar-right{font-family:'Fredoka One',cursive;font-size:0.85rem;background:rgba(255,255,255,0.15);
+  border:2px solid rgba(255,255,255,0.3);border-radius:30px;padding:5px 14px;
+  color:rgba(255,255,255,0.9);box-shadow:0 3px 0 rgba(0,0,0,0.2);}
+
+/* SCORE BAR */
+.score-bar{position:relative;z-index:9;margin-top:28px;width:100%;max-width:680px;
+  display:flex;align-items:center;gap:10px;padding:0 20px;}
+.sc{display:flex;align-items:center;gap:7px;background:var(--white);border-radius:40px;
+  padding:9px 18px;box-shadow:var(--shadow);border:2.5px solid transparent;
+  transition:all 0.25s;flex-shrink:0;}
+.sc.ok{border-color:#d1fae5;box-shadow:0 4px 0 #a7f3d0,var(--shadow)}
+.sc.ko{border-color:#fee2e2;box-shadow:0 4px 0 #fca5a5,var(--shadow)}
+.sc .ico{width:28px;height:28px;flex-shrink:0}
+.sc .lbl{font-size:0.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.04em}
+.sc .num{font-family:'Fredoka One',cursive;font-size:1.4rem;line-height:1}
+.sc.ok .num{color:var(--green)}.sc.ko .num{color:var(--red)}
+@keyframes numBump{0%{transform:scale(1)}50%{transform:scale(1.6)}100%{transform:scale(1)}}
+.num.bump{animation:numBump 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+.prog-area{flex:1;display:flex;flex-direction:column;gap:5px;align-items:center}
+.prog-wrap{width:100%;height:14px;border-radius:14px;background:#e2e8f0;overflow:hidden;
+  border:2px solid rgba(59,130,246,0.15);box-shadow:inset 0 2px 4px rgba(0,0,0,0.06);}
+.prog-bar{height:100%;border-radius:14px;background:linear-gradient(90deg,#3b82f6,#06D6A0);
+  transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);width:0%;position:relative;overflow:hidden;}
+.prog-bar::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);
+  animation:progShimmer 1.8s ease-in-out infinite;}
+@keyframes progShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
+.prog-label{font-size:0.78rem;font-weight:800;color:var(--muted)}
+
+/* THEME BADGE */
+.theme-badge{position:relative;z-index:9;margin-top:10px;
+  background:linear-gradient(135deg,#dbeafe,#ede9fe);border:2.5px solid #93c5fd;border-radius:30px;
+  padding:7px 22px;font-family:'Fredoka One',cursive;font-size:0.9rem;color:#1e40af;
+  display:flex;align-items:center;gap:8px;
+  box-shadow:0 3px 0 #93c5fd,0 6px 20px rgba(59,130,246,0.15);
+  animation:badgeIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both 0.2s;}
+@keyframes badgeIn{0%{opacity:0;transform:scale(0.5)}100%{opacity:1;transform:scale(1)}}
+
+/* IMAGE STAGE */
+.stage{position:relative;z-index:5;width:100%;max-width:520px;
+  padding:16px 20px 0;display:flex;justify-content:center;flex:1;}
+.img-card{position:relative;width:100%;background:var(--white);border-radius:32px;
+  box-shadow:0 8px 0 #bfdbfe,var(--shadow-md);border:3.5px solid #bfdbfe;overflow:hidden;
+  cursor:pointer;transition:transform 0.15s,border-color 0.2s,box-shadow 0.2s;
+  min-height:340px;display:flex;align-items:center;justify-content:center;}
+.img-card:hover{transform:scale(1.018);border-color:#60a5fa;box-shadow:0 10px 0 #93c5fd,0 20px 60px rgba(37,99,235,0.2)}
+.img-card:active{transform:scale(0.98)}
+.card-deco{position:absolute;pointer-events:none;z-index:1}
+.card-deco.tl{top:8px;left:8px;animation:decoWig 3s ease-in-out infinite}
+.card-deco.br{bottom:44px;right:8px;animation:decoWig 3.5s ease-in-out infinite 0.5s}
+@keyframes decoWig{0%,100%{transform:rotate(-10deg) scale(1)}50%{transform:rotate(10deg) scale(1.15)}}
+.img-card img{max-width:88%;max-height:310px;object-fit:contain;padding:20px;
+  display:block;position:relative;z-index:2;}
+.click-tip{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  font-size:0.73rem;font-weight:800;color:#2563eb;
+  background:linear-gradient(135deg,#dbeafe,#ede9fe);border:2px solid #93c5fd;
+  border-radius:20px;padding:5px 16px;pointer-events:none;white-space:nowrap;
+  letter-spacing:0.03em;box-shadow:0 3px 10px rgba(59,130,246,0.2);z-index:5;
+  animation:tipPulse 2s ease-in-out infinite;}
+@keyframes tipPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.04)}}
+@keyframes cardFlip{0%{opacity:0;transform:scale(0.8) rotateY(-20deg)}60%{transform:scale(1.05) rotateY(4deg)}100%{opacity:1;transform:scale(1) rotateY(0)}}
+.img-card.flip img{animation:cardFlip 0.45s cubic-bezier(0.34,1.56,0.64,1) both}
+@keyframes flashG{0%,100%{background:transparent}30%{background:rgba(16,185,129,0.15)}}
+@keyframes flashR{0%,100%{background:transparent}30%{background:rgba(239,68,68,0.15)}}
+.img-card.fg{animation:flashG 0.5s ease}.img-card.fr{animation:flashR 0.5s ease}
+
+/* ACTION BUTTONS */
+.actions{position:relative;z-index:9;width:100%;max-width:480px;
+  display:flex;gap:14px;padding:16px 20px 28px;justify-content:center;}
+.btn{flex:1;max-width:210px;display:flex;align-items:center;justify-content:center;gap:10px;
+  font-family:'Fredoka One',cursive;font-size:1.1rem;border:none;border-radius:50px;
+  padding:14px 20px;cursor:pointer;transition:all 0.2s ease;letter-spacing:0.03em;
+  position:relative;overflow:hidden;}
+.btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.22),transparent);border-radius:inherit;pointer-events:none}
+.btn-icon{width:28px;height:28px;flex-shrink:0}
+.btn-correct{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 6px 0 #047857,0 10px 28px rgba(16,185,129,0.4);}
+.btn-correct:hover:not(:disabled){transform:translateY(-5px);box-shadow:0 11px 0 #047857,0 18px 38px rgba(16,185,129,0.5)}
+.btn-correct:active:not(:disabled){transform:translateY(2px);box-shadow:0 3px 0 #047857}
+.btn-wrong{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;box-shadow:0 6px 0 #b91c1c,0 10px 28px rgba(239,68,68,0.4);}
+.btn-wrong:hover:not(:disabled){transform:translateY(-5px);box-shadow:0 11px 0 #b91c1c,0 18px 38px rgba(239,68,68,0.5)}
+.btn-wrong:active:not(:disabled){transform:translateY(2px);box-shadow:0 3px 0 #b91c1c}
+.btn:disabled{opacity:0.25;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+/* FINISH SCREEN */
+.finish-screen{display:none;position:relative;z-index:9;flex-direction:column;align-items:center;
+  gap:16px;text-align:center;width:100%;max-width:560px;padding:20px 20px 0;}
+.finish-card{background:var(--white);border-radius:32px;padding:36px 28px;
+  box-shadow:0 8px 0 #bfdbfe,var(--shadow-md);border:3.5px solid #dbeafe;width:100%;
+  display:flex;flex-direction:column;align-items:center;gap:14px;position:relative;overflow:hidden;}
+.fc-deco{position:absolute;pointer-events:none;opacity:0.18}
+.fc-deco.tl{top:10px;left:10px}.fc-deco.tr{top:10px;right:10px}
+.f-emoji-wrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.f-emoji{font-size:70px;animation:popIn 0.7s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes popIn{0%{transform:scale(0) rotate(-20deg)}70%{transform:scale(1.15) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+.cheer-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.cheer-item{animation:cheerBounce 0.6s cubic-bezier(0.34,1.56,0.64,1) both}
+@keyframes cheerBounce{0%{opacity:0;transform:scale(0) rotate(-30deg)}80%{transform:scale(1.2) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+.f-title{font-family:'Fredoka One',cursive;font-size:2rem;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.f-score-ring{width:130px;height:130px;border-radius:50%;
+  background:linear-gradient(135deg,#dbeafe,#ede9fe);border:5px solid #3b82f6;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  box-shadow:0 0 0 10px rgba(59,130,246,0.1),0 8px 0 #93c5fd;
+  animation:ringPop 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;}
+@keyframes ringPop{0%{transform:scale(0)}100%{transform:scale(1)}}
+.f-score-num{font-family:'Fredoka One',cursive;font-size:2.6rem;color:#2563eb;line-height:1}
+.f-score-lbl{font-size:0.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em}
+.f-stats{display:flex;gap:12px;width:100%}
+.f-stat{display:flex;flex-direction:column;align-items:center;gap:4px;background:#f8fafc;border-radius:18px;padding:12px 14px;border:2.5px solid #e2e8f0;flex:1;box-shadow:0 4px 0 #e2e8f0;}
+.f-stat .sv{font-family:'Fredoka One',cursive;font-size:1.6rem}
+.f-stat .sl{font-size:0.65rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;text-align:center}
+.fs-ok .sv{color:var(--green)}.fs-ko .sv{color:var(--red)}.fs-pct .sv{color:var(--blue)}
+.f-msg{font-size:0.92rem;font-weight:700;color:var(--muted);padding:10px 24px;background:#f8fafc;border-radius:30px;border:2.5px solid #e2e8f0;text-align:center;}
+
+/* REVISION BUTTON & PANEL */
+.btn-revision{display:none;align-items:center;justify-content:center;gap:10px;
+  font-family:'Fredoka One',cursive;font-size:1rem;
+  background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;
+  border:none;border-radius:50px;padding:14px 28px;cursor:pointer;
+  transition:all 0.2s;width:100%;max-width:340px;
+  box-shadow:0 6px 0 #92400e,0 10px 28px rgba(245,158,11,0.4);}
+.btn-revision:hover{transform:translateY(-4px);box-shadow:0 10px 0 #92400e,0 18px 36px rgba(245,158,11,0.5)}
+.revision-overlay{display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(15,23,42,0.75);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;padding:20px;}
+.revision-overlay.open{display:flex;animation:overlayIn 0.3s ease}
+@keyframes overlayIn{from{opacity:0}to{opacity:1}}
+.revision-panel{background:var(--white);border-radius:28px;width:100%;max-width:700px;max-height:88vh;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.4);border:3px solid #fde68a;
+  animation:panelSlide 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes panelSlide{from{transform:scale(0.85) translateY(30px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.revision-header{background:linear-gradient(135deg,#f59e0b,#d97706);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.revision-header h2{font-family:'Fredoka One',cursive;font-size:1.3rem;color:#fff;display:flex;align-items:center;gap:10px;}
+.rev-close{background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#fff;font-weight:900;transition:all 0.2s;flex-shrink:0;}
+.rev-close:hover{background:rgba(255,255,255,0.35);transform:rotate(90deg) scale(1.1)}
+.revision-subtitle{padding:14px 24px 0;font-weight:800;font-size:0.9rem;color:var(--muted);display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.rev-count-badge{background:#fef3c7;color:#92400e;font-family:'Fredoka One',cursive;font-size:0.85rem;border-radius:20px;padding:3px 12px;border:2px solid #fde68a;margin-left:auto}
+.revision-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;padding:16px 20px 24px;overflow-y:auto;flex:1;}
+.rev-card{background:var(--white);border-radius:18px;overflow:hidden;border:3px solid #fee2e2;
+  box-shadow:0 4px 0 #fca5a5,0 6px 16px rgba(239,68,68,0.1);display:flex;flex-direction:column;align-items:center;
+  transition:transform 0.2s;animation:revCardIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  animation-delay:calc(var(--ri,0)*0.06s);}
+@keyframes revCardIn{0%{opacity:0;transform:scale(0.6) translateY(20px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+.rev-card:hover{transform:translateY(-4px)}
+.rev-card-img{width:100%;aspect-ratio:1;background:#fff8f8;display:flex;align-items:center;justify-content:center;padding:12px}
+.rev-card-img img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px}
+.rev-card-footer{width:100%;padding:8px 10px;background:#fff8f8;border-top:2px solid #fee2e2;display:flex;align-items:center;justify-content:center;gap:6px;}
+.rev-badge{display:flex;align-items:center;gap:4px;font-size:0.72rem;font-weight:800;color:#dc2626}
+.revision-footer{padding:14px 20px;background:#fffbeb;border-top:2px solid #fde68a;display:flex;gap:10px;justify-content:center;flex-shrink:0;flex-wrap:wrap;}
+.btn-rev-action{font-family:'Fredoka One',cursive;font-size:0.95rem;border:none;border-radius:40px;padding:12px 24px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px;}
+.btn-rev-replay{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;box-shadow:0 5px 0 #92400e}
+.btn-rev-replay:hover{transform:translateY(-3px)}
+.btn-rev-close2{background:#f1f5f9;color:var(--ink);border:2.5px solid #e2e8f0;box-shadow:0 4px 0 #e2e8f0}
+.btn-rev-close2:hover{transform:translateY(-2px)}
+.btn-rev-action svg{width:20px;height:20px;flex-shrink:0}
+.rev-empty{display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px 24px;text-align:center;flex:1}
+.rev-empty h3{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--green)}
+.rev-empty p{font-size:0.9rem;color:var(--muted);font-weight:700}
+
+/* RESTART */
+.restart-area{display:none;width:100%;max-width:480px;flex-direction:column;gap:12px;padding:14px 20px 40px;align-items:center;}
+.btn-restart{font-family:'Fredoka One',cursive;font-size:1rem;border:none;border-radius:50px;padding:14px 32px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px;width:100%;max-width:340px;justify-content:center;}
+.btn-r1{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;box-shadow:0 6px 0 #4c1d95,0 10px 28px rgba(37,99,235,0.35)}
+.btn-r1:hover{transform:translateY(-4px)}
+.btn-r2{background:#f8fafc;color:var(--ink);border:2.5px solid #e2e8f0;box-shadow:0 4px 0 #e2e8f0}
+.btn-r2:hover{transform:translateY(-2px)}
+a.btn-restart{text-decoration:none}
+
+/* CONFETTI */
+.confetti-piece{position:fixed;pointer-events:none;z-index:20;width:10px;height:10px;border-radius:2px;animation:confettiFall var(--cd,2.5s) ease-in var(--cdelay,0s) both;}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* EMPTY STATE */
+.empty-state{position:relative;z-index:9;display:none;flex-direction:column;align-items:center;gap:16px;text-align:center;padding:60px 24px;}
+.empty-state .big{font-size:70px;animation:wig 2s ease-in-out infinite}
+@keyframes wig{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.empty-state h2{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--ink)}
+.empty-state p{color:var(--muted);font-weight:700}
+
+/* STAR COUNTER */
+.star-counter{position:relative;z-index:9;margin-top:8px;display:flex;gap:4px;justify-content:center;align-items:center;flex-wrap:wrap;}
+.star-item{width:20px;height:20px;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);opacity:0.2}
+.star-item.lit{opacity:1;animation:starLit 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes starLit{0%{transform:scale(0)}70%{transform:scale(1.5)}100%{transform:scale(1)}}
+
+/* FOOTER */
+.school-footer{position:relative;z-index:9;width:100%;background:linear-gradient(135deg,#1e3a8a,#2563eb);padding:14px 24px;text-align:center;margin-top:auto;border-top:4px solid #FFD93D;}
+.school-footer p{font-size:0.75rem;color:rgba(255,255,255,0.7);font-weight:700;letter-spacing:0.05em}
+@media(max-width:480px){.f-stats{gap:8px}.f-stat{padding:10px 10px}.revision-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}.reaction-face{width:80px;height:80px}.reaction-label{font-size:0.8rem;padding:4px 10px}}
+
+/* ══════════════════════════════════════
+   MODE SCREEN
+══════════════════════════════════════ */
+.mode-screen{
+  position:fixed;inset:0;z-index:490;overflow:hidden;
+  background:linear-gradient(170deg,#0a0f2e 0%,#0d1b4b 30%,#0f2d6b 65%,#1a3a8a 100%);
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+}
+.mode-screen.active{display:flex}
+.mode-screen.hiding{animation:readyHide 0.6s cubic-bezier(0.4,0,0.6,1) both}
+
+.mode-title{
+  font-family:'Fredoka One',cursive;font-size:1.6rem;color:#fff;
+  text-align:center;letter-spacing:0.04em;
+  animation:pillDrop 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.1s both;
+}
+.mode-title span{
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.mode-cards{
+  display:flex;gap:20px;flex-wrap:wrap;justify-content:center;
+  animation:ctaRise 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+}
+
+.mode-card{
+  background:rgba(255,255,255,0.07);
+  border:2.5px solid rgba(255,255,255,0.18);
+  backdrop-filter:blur(14px);
+  border-radius:28px;padding:28px 24px;
+  width:220px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;overflow:hidden;
+}
+.mode-card::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(255,255,255,0.06),transparent);
+  pointer-events:none;
+}
+.mode-card:hover{
+  transform:translateY(-10px) scale(1.04);
+  border-color:rgba(255,255,255,0.45);
+  background:rgba(255,255,255,0.13);
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+}
+.mode-card.selected{
+  border-color:#fbbf24;
+  background:rgba(251,191,36,0.12);
+  box-shadow:0 0 0 3px rgba(251,191,36,0.3),0 20px 60px rgba(0,0,0,0.4);
+}
+.mode-card-icon{font-size:52px;line-height:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3))}
+.mode-card-title{
+  font-family:'Fredoka One',cursive;font-size:1.2rem;color:#fff;
+  text-align:center;letter-spacing:0.02em;
+}
+.mode-card-desc{
+  font-size:0.82rem;font-weight:700;color:rgba(255,255,255,0.6);
+  text-align:center;line-height:1.5;
+}
+
+/* Timer input panel */
+.mode-timer-panel{
+  display:none;
+  flex-direction:column;align-items:center;gap:12px;
+  animation:ctaRise 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  background:rgba(255,255,255,0.07);border:2px solid rgba(255,255,255,0.18);
+  backdrop-filter:blur(14px);border-radius:24px;padding:20px 28px;
+  width:100%;max-width:340px;
+}
+.mode-timer-panel.visible{display:flex}
+.mode-timer-label{
+  font-family:'Fredoka One',cursive;font-size:1rem;color:#fff;letter-spacing:0.03em;
+}
+.mode-timer-label span{color:#fbbf24}
+.mode-timer-row{display:flex;gap:10px;align-items:center;width:100%}
+.mode-timer-input{
+  flex:1;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.25);
+  border-radius:14px;padding:12px 16px;
+  font-family:'Fredoka One',cursive;font-size:1.2rem;color:#fff;
+  text-align:center;outline:none;
+  transition:border-color 0.2s;
+}
+.mode-timer-input::placeholder{color:rgba(255,255,255,0.35)}
+.mode-timer-input:focus{border-color:#fbbf24}
+.mode-timer-presets{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.mode-preset{
+  background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);
+  border-radius:20px;padding:6px 14px;cursor:pointer;
+  font-family:'Fredoka One',cursive;font-size:0.82rem;color:rgba(255,255,255,0.8);
+  transition:all 0.2s;
+}
+.mode-preset:hover{background:rgba(251,191,36,0.2);border-color:#fbbf24;color:#fbbf24}
+.mode-preset.active{background:rgba(251,191,36,0.25);border-color:#fbbf24;color:#fbbf24}
+
+/* Confirm button */
+.mode-confirm-btn{
+  font-family:'Fredoka One',cursive;font-size:1.2rem;color:#1a0a00;
+  background:linear-gradient(145deg,#fde68a 0%,#fbbf24 35%,#f59e0b 65%,#d97706 100%);
+  border:none;border-radius:60px;padding:16px 48px;cursor:pointer;
+  box-shadow:0 7px 0 #92400e,0 14px 36px rgba(245,158,11,0.45),inset 0 2px 0 rgba(255,255,255,0.4);
+  transition:all 0.15s;display:flex;align-items:center;gap:12px;letter-spacing:0.04em;
+  animation:ctaRise 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.35s both;
+}
+.mode-confirm-btn:hover{transform:translateY(-5px);box-shadow:0 12px 0 #92400e,0 22px 48px rgba(245,158,11,0.6),inset 0 2px 0 rgba(255,255,255,0.4)}
+.mode-confirm-btn:active{transform:translateY(2px);box-shadow:0 4px 0 #92400e}
+
+/* ── TIMER BAR (in-game) ── */
+.timer-bar-wrap{
+  display:none;
+  position:relative;z-index:9;
+  width:100%;max-width:480px;
+  padding:0 20px;margin-top:-6px;margin-bottom:2px;
+}
+.timer-bar-wrap.active{display:block}
+.timer-bar-track{
+  height:10px;background:rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;
+  border:1.5px solid #e2e8f0;
+}
+.timer-bar-fill{
+  height:100%;border-radius:10px;
+  background:linear-gradient(90deg,#10b981,#3b82f6);
+  transition:width 0.1s linear;
+  position:relative;
+}
+.timer-bar-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);
+  animation:progShimmer 1.8s ease-in-out infinite;
+}
+.timer-bar-fill.warning{background:linear-gradient(90deg,#f59e0b,#ef4444)}
+.timer-label-row{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:3px;
+}
+.timer-secs{
+  font-family:'Fredoka One',cursive;font-size:0.82rem;color:var(--muted);
+}
+.timer-secs.warning{color:#ef4444}
+
+
+/* ══════════════════════════════════════
+   READY SCREEN — MOBILE RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:600px){
+
+  .ready-screen{
+    gap:6px;
+    justify-content:center;
+    padding:10px 0 0;
+    overflow-x:hidden;
+  }
+
+  .ready-theme-pill{
+    font-size:0.85rem;
+    padding:7px 16px;
+    gap:6px;
+  }
+
+  /* Stack bubble ON TOP of student, vertically */
+  .ready-scene{
+    flex-direction:column-reverse;
+    align-items:center;
+    gap:0;
+    margin-top:0;
+    padding:0;
+    width:100%;
+    overflow:visible;
+  }
+
+  /* Bubble: full width centered, no tail */
+  .ready-bubble{
+    position:relative;
+    max-width:88vw;
+    min-width:0;
+    width:88vw;
+    padding:12px 16px;
+    margin-bottom:0;
+    margin-top:8px;
+    border-radius:20px;
+    align-self:center;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    order:2;
+  }
+  .ready-bubble h2{font-size:1.1rem;margin-bottom:5px}
+  .ready-bubble p{font-size:0.76rem;line-height:1.4}
+  .bubble-tail{display:none}
+
+  /* Mascot: centered, clipped to screen */
+  .ready-mascot-wrap{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    overflow:hidden;
+    order:1;
+  }
+
+  /* Student width controlled — no inline override */
+  .student{
+    width:240px !important;
+  }
+
+  /* Hide floats — they overflow on narrow screens */
+  .float-item{display:none !important}
+
+  .student-glow{
+    width:160px;
+    height:160px;
+  }
+
+  .ready-cta{
+    margin-top:6px;
+    gap:6px;
+    width:100%;
+    padding:0 16px;
+  }
+
+  .ready-btn{
+    font-size:1.05rem;
+    padding:14px 28px;
+    width:100%;
+    justify-content:center;
+  }
+
+  .ready-count{font-size:0.78rem}
+}
+
+</style>
+</head>
+<body>
+
+<div class="bg-shapes"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<!-- Side doodles -->
+<div class="school-doodles">
+  <div class="sdoodle" style="top:14%;left:2px;--d:5s;--r0:-6deg;--r1:8deg"><svg width="30" height="30" viewBox="0 0 30 30" fill="none"><rect x="4" y="2" width="17" height="26" rx="3" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/><rect x="7" y="7" width="11" height="1.5" rx="0.75" fill="#3b82f6"/><rect x="7" y="11" width="11" height="1.5" rx="0.75" fill="#3b82f6"/><rect x="7" y="15" width="7" height="1.5" rx="0.75" fill="#93c5fd"/><rect x="4" y="2" width="4" height="26" rx="1" fill="#93c5fd"/></svg></div>
+  <div class="sdoodle" style="top:31%;left:2px;--d:7s;--del:-1.5s;--r0:4deg;--r1:-8deg"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="22" width="22" height="4" rx="2" fill="#fbbf24"/><rect x="7" y="3" width="2.5" height="21" rx="1.25" fill="#1e3a8a" transform="rotate(-8 7 3)"/><polygon points="7,3 9.5,3 8.25,0" fill="#ef4444"/><rect x="7" y="21" width="2.5" height="3" rx="0.5" fill="#fcd34d"/></svg></div>
+  <div class="sdoodle" style="top:50%;left:2px;--d:6s;--del:-3s;--r0:0deg;--r1:10deg"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="1" y="9" width="26" height="2" rx="1" fill="#3b82f6"/><rect x="3" y="6" width="22" height="2" rx="1" fill="#93c5fd"/><rect x="3" y="18" width="22" height="2" rx="1" fill="#93c5fd"/><path d="M14 2L16 6H21L17 10L18.5 16L14 13L9.5 16L11 10L7 6H12Z" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.5"/></svg></div>
+  <div class="sdoodle" style="top:68%;left:2px;--d:8s;--del:-2s;--r0:-5deg;--r1:6deg"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="4" width="24" height="20" rx="4" fill="#fef3c7" stroke="#fbbf24" stroke-width="1.5"/><rect x="6" y="9" width="16" height="2" rx="1" fill="#f59e0b"/><rect x="6" y="14" width="11" height="2" rx="1" fill="#fbbf24"/><rect x="6" y="19" width="7" height="2" rx="1" fill="#fde68a"/></svg></div>
+  <div class="sdoodle" style="top:84%;left:2px;--d:5.5s;--del:-4s;--r0:3deg;--r1:-7deg"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 2L24 8V14C24 19.5 19 24 13 25.5 7 24 2 19.5 2 14V8Z" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/><text x="7" y="18" font-size="11" font-family="sans-serif" font-weight="bold" fill="#065f46">A</text></svg></div>
+  <div class="sdoodle" style="top:18%;right:2px;--d:6.5s;--del:-0.5s;--r0:-4deg;--r1:9deg"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="10" r="5" fill="#fce7f3" stroke="#ec4899" stroke-width="1.5"/><path d="M5 24C5 18.5 8.5 16 14 16C19.5 16 23 18.5 23 24" fill="#fce7f3" stroke="#ec4899" stroke-width="1.5"/><path d="M9 7Q14 4 19 7" stroke="#fbbf24" stroke-width="1.5" fill="none"/></svg></div>
+  <div class="sdoodle" style="top:36%;right:2px;--d:7.5s;--del:-2.5s;--r0:6deg;--r1:-9deg"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="5" width="24" height="18" rx="3" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/><circle cx="14" cy="14" r="5" fill="#7c3aed" opacity="0.25"/><circle cx="14" cy="14" r="2" fill="#7c3aed"/><line x1="2" y1="10" x2="26" y2="10" stroke="#7c3aed" stroke-width="1" opacity="0.4"/></svg></div>
+  <div class="sdoodle" style="top:56%;right:2px;--d:5s;--del:-1s;--r0:-3deg;--r1:7deg"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 2L24 7V13C24 19 19 23 13 25 7 23 2 19 2 13V7Z" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/><path d="M13 8V18M8 13H18" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg></div>
+  <div class="sdoodle" style="top:74%;right:2px;--d:9s;--del:-3.5s;--r0:2deg;--r1:-8deg"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="4" y="2" width="18" height="22" rx="3" fill="#fff7ed" stroke="#f97316" stroke-width="1.5"/><rect x="7" y="7" width="12" height="1.5" rx="0.75" fill="#f97316"/><rect x="7" y="11" width="9" height="1.5" rx="0.75" fill="#fb923c"/><rect x="7" y="15" width="6" height="1.5" rx="0.75" fill="#fdba74"/><circle cx="19" cy="4" r="2.5" fill="#fbbf24"/></svg></div>
+</div>
+
+<!-- ══ READY SCREEN ══ -->
+<div class="ready-screen" id="readyScreen">
+
+  <!-- Animated sky -->
+  <div class="ready-sky" id="readySky">
+    <!-- bokeh orbs -->
+    <div class="bokeh" style="width:300px;height:300px;top:-80px;left:-60px;background:radial-gradient(circle,rgba(99,102,241,0.2),transparent 70%);--bd:12s;--bdel:-3s;--bo:0.3"></div>
+    <div class="bokeh" style="width:250px;height:250px;top:10%;right:-50px;background:radial-gradient(circle,rgba(16,185,129,0.15),transparent 70%);--bd:9s;--bdel:-6s;--bo:0.25"></div>
+    <div class="bokeh" style="width:200px;height:200px;bottom:15%;left:10%;background:radial-gradient(circle,rgba(251,191,36,0.12),transparent 70%);--bd:14s;--bdel:-2s;--bo:0.2"></div>
+    <div class="bokeh" style="width:180px;height:180px;bottom:25%;right:5%;background:radial-gradient(circle,rgba(236,72,153,0.12),transparent 70%);--bd:11s;--bdel:-8s;--bo:0.22"></div>
+    <!-- shooting stars -->
+    <div class="shoot-star" style="top:8%;left:5%;--sd:4s;--sdel:0s"></div>
+    <div class="shoot-star" style="top:22%;left:40%;--sd:6s;--sdel:-2.5s"></div>
+    <div class="shoot-star" style="top:15%;left:70%;--sd:5s;--sdel:-4s"></div>
+    <!-- aurora -->
+    <div class="ready-aurora"></div>
+    <!-- stars -->
+    <div id="readyStars"></div>
+  </div>
+
+  <!-- Theme pill -->
+  <div class="ready-theme-pill" id="readyThemePill">
+    <div class="pill-dot"></div>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="rgba(255,255,255,0.85)" stroke-width="2.5" stroke-linecap="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="rgba(255,255,255,0.85)" stroke-width="2.5"/></svg>
+    <span id="readyThemeName">Thème</span>
+    <div class="pill-dot"></div>
+  </div>
+
+  <!-- Scene: student + bubble -->
+  <div class="ready-scene">
+
+    <!-- Speech bubble (left side) -->
+    <div class="ready-bubble">
+      <h2 id="readyBubbleTitle">Tu es prêt(e) ?</h2>
+      <p id="readyBubbleMsg">Concentre-toi bien !<br>Regarde chaque image et dis si tu connais le mot.</p>
+      <div class="ready-dots"><div class="rdot"></div><div class="rdot"></div><div class="rdot"></div></div>
+      <div class="bubble-tail"></div>
+    </div>
+
+    <!-- STUDENT MASCOT -->
+    <div class="ready-mascot-wrap" id="mascotWrap">
+      <!-- glow -->
+      <div class="student-glow"></div>
+
+      <!-- floating decorative items -->
+      <span class="float-item" style="top:-30px;left:-50px;--fd:3.5s;--fdel:0s;--fr0:-8deg;--fr1:6deg">🌟</span>
+      <span class="float-item" style="top:10px;right:-60px;--fd:4.5s;--fdel:-1.5s;--fr0:5deg;--fr1:-8deg">✨</span>
+      <span class="float-item" style="top:100px;right:-65px;--fd:5s;--fdel:-0.8s;--fr0:-4deg;--fr1:7deg">🏆</span>
+      <span class="float-item" style="bottom:100px;left:-65px;--fd:4s;--fdel:-2s;--fr0:6deg;--fr1:-6deg">💡</span>
+      <span class="float-item" style="bottom:60px;right:-60px;--fd:3.8s;--fdel:-3s;--fr0:-5deg;--fr1:8deg">🎓</span>
+      <span class="float-item" style="top:50%;left:-70px;--fd:6s;--fdel:-1s;--fr0:3deg;--fr1:-9deg;font-size:22px">📚</span>
+
+      <!-- THE REAL STUDENT SVG with GSAP -->
+      <div class="student" style="margin:0 auto;position:relative;">
+        <svg id="student" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 400 385">
+          <circle class="circle" style="display:none;" id="BG" opacity="0.25" cx="200.011" cy="208" r="157.657" fill="#4ECDC4"/>
+          <circle class="circle" style="display:none;" id="dashed" opacity="0.2" fill="none" stroke="#FFFFFF" stroke-width="1.9028" stroke-miterlimit="10" stroke-dasharray="6.5548" cx="200.333" cy="208" r="176.666"/>
+          <g id="stud_whole" style="display:none;">
+            <g id="stud_body">
+              <path fill="#FFFFFF" d="M300,323v-9.401C300,268.536,255.131,232,200.241,232h-1.482C143.869,232,99,268.536,99,313.599V323H300z"/>
+              <path fill="#C99877" d="M251.2,240.3l-46.504,46.501c-2.868,2.869-7.521,2.869-10.391,0L147.803,240.3C115.768,254.945,94,282.958,94,315.111V326h211v-10.889C305,282.958,283.232,254.945,251.2,240.3z"/>
+              <path opacity="0.2" d="M251.2,240.3l-46.504,46.501c-2.868,2.869-7.521,2.869-10.391,0L147.803,240.3C115.768,254.945,94,282.958,94,315.111V326l0,0c0-31.997,21.801-60.071,53.8-74.7l46.503,46.498c2.869,2.872,7.522,2.872,10.392,0.001l46.505-46.499C283.197,265.93,305,294.003,305,326l0,0v-10.889C305,282.958,283.232,254.945,251.2,240.3z"/>
+            </g>
+            <g id="stud_head">
+              <path fill="#DDA37C" d="M135.934,194.953c-5.481,0-9.926-5.162-9.926-11.53s4.444-11.529,9.926-11.529"/>
+              <path opacity="0.1" d="M261,190.046c0,36.915-27.145,66.838-61.5,66.838l0,0c-34.356,0-61.5-29.923-61.5-66.838v-23.247c0-36.916,27.144-66.838,61.5-66.838l0,0c34.355,0,61.5,29.922,61.5,66.838V190.046z"/>
+              <path fill="#FBD099" d="M266,185.046c0,36.915-29.589,66.838-66.5,66.838l0,0c-36.912,0-66.5-29.923-66.5-66.838v-23.247c0-36.916,29.588-66.838,66.5-66.838l0,0c36.911,0,66.5,29.922,66.5,66.838V185.046z"/>
+              <path fill="#F2C38F" d="M200.777,94.961c-1.348,0-2.754,0.052-4.08,0.13C224.17,105.823,243,131.293,243,161.013v24.819c0,29.719-18.879,55.189-46.352,65.921c1.326,0.079,2.77,0.131,4.117,0.131c36.91,0,66.234-29.923,66.234-66.838v-23.247C267,124.883,237.688,94.961,200.777,94.961z"/>
+              <path fill="#DDA37C" d="M275.367,183.423c0-5.789-4.367-10.567-8.367-11.391v-10.233c0-36.916-29.312-66.838-66.223-66.838c-1.467,0-3.011,0.063-4.451,0.157C231.151,97.365,258,126.349,258,161.799v23.247c0,35.449-26.896,64.434-61.723,66.681c1.441,0.093,2.913,0.157,4.38,0.157c33.56,0,60.81-24.737,65.473-56.975C271.26,194.463,275.367,189.498,275.367,183.423z"/>
+              <path fill="#99492C" d="M219.818,211.524c0,11.122-9.018,20.14-20.143,20.14c-11.124,0-20.143-9.018-20.143-20.14"/>
+              <path fill="#FFFFFF" d="M219.818,211.285c0,1.709-0.213,3.715-0.613,4.715h-39.158c-0.289-1-0.514-3.003-0.514-4.832"/>
+              <g class="eye">
+                <circle fill="#FFFFFF" cx="230.19" cy="178.929" r="9.551"/>
+                <path d="M230.19,173.222c-0.481,0-0.949,0.06-1.398,0.171c0.258,0.405,0.406,0.885,0.406,1.4c0,1.447-1.172,2.619-2.619,2.619c-0.654,0-1.253-0.241-1.714-0.638c-0.283,0.681-0.44,1.429-0.44,2.214c0,3.184,2.581,5.764,5.766,5.764s5.766-2.58,5.766-5.764C235.956,175.803,233.375,173.222,230.19,173.222z"/>
+              </g>
+              <g class="eye">
+                <circle fill="#FFFFFF" cx="170.802" cy="178.929" r="9.552"/>
+                <path d="M170.802,173.222c-0.482,0-0.949,0.06-1.398,0.171c0.257,0.405,0.407,0.885,0.407,1.4c0,1.447-1.174,2.619-2.62,2.619c-0.655,0-1.254-0.241-1.714-0.638c-0.283,0.681-0.44,1.429-0.44,2.214c0,3.184,2.581,5.764,5.766,5.764s5.766-2.58,5.766-5.764C176.567,175.803,173.986,173.222,170.802,173.222z"/>
+              </g>
+              <g>
+                <path fill-rule="evenodd" clip-rule="evenodd" fill="#6B3815" d="M258,136v30.774c7-0.883,12-5.43,12-10.922V126H258z"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" fill="#6B3815" d="M147.109,164.33c-7.143,5.105-18.449,1.699-19.795-9.419c-10.266-58.371,21.152-60.824,21.152-60.824s-2.678-1.742-4.252-2.767c6.418-3.438,13.241-2.234,19.043,1.522C187.104,107.034,166.324,151.184,147.109,164.33z"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" fill="#4F260B" d="M166.006,96.921l-4.389,10.162c9.484,31.142-10.533,54.303-10.533,54.303C162.5,151.977,184.316,119.742,166.006,96.921z"/>
+                <g id="hair">
+                  <path fill-rule="evenodd" clip-rule="evenodd" fill="#6B3815" d="M201.883,146.219c1.371,2.254,2.523,4.146,4.095,6.729c-59.673-18.631-46.111-60.226-41.876-66.788c4.234-6.563,11.658-12.6,20.608-16.324c-0.481,1.902-0.858,3.393-1.235,4.888c22.131-7.764,49.002-0.148,63.532,10.733c4.941,3.701,9.703,7.613,14.57,11.401c8.224,6.396,17.896,9.472,28.993,10.778c-5.158,7.781-17.902,14.202-17.902,14.202s7.69,3.34,12.366,5.37C285.034,127.208,254.983,157.615,201.883,146.219z"/>
+                  <path fill-rule="evenodd" clip-rule="evenodd" fill="#4F260B" d="M256.379,104.706c0,0,16.915,9.361,33.83,3.449c0,0-4.816,6.628-17.347,14.047C272.862,122.201,260.942,116.496,256.379,104.706z"/>
+                  <path fill-rule="evenodd" clip-rule="evenodd" fill="#4F260B" d="M193.809,123.123c0,0,23.333,28.178,56.271,22.617c0,0-27.564,7.207-48.49,0.195C201.59,145.936,193.254,133.809,193.809,123.123z"/>
+                  <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" fill="#4F260B" d="M170.264,132.057c-4.944,13.301-14.129,26.021-23.009,32.167c0.385-0.181,0.765-0.378,1.132-0.599c8.695-4.995,17.765-15.334,22.678-25.838c6.094,6.406,16.153,12.604,32.137,17.391c-1.082-1.578-1.949-2.84-2.838-4.135C186.019,145.805,176.47,139.134,170.264,132.057z"/>
+                  <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" fill="#4F260B" d="M250.08,145.74c0,0-25.727,6.724-46.34,0.857c-0.617-0.123-1.234-0.245-1.857-0.379c0.924,1.518,1.75,2.876,2.67,4.388c38.78,6.563,60.551-8.702,65.84-13.063c-5.628,3.07-12.816,6.19-21.48,8.359C249.303,145.846,249.688,145.807,250.08,145.74z"/>
+                </g>
+              </g>
+              <g id="glasses">
+                <path opacity="0.25" fill="#4F260B" d="M247.237,159h-27.354c-7.833,0-13.884,5.873-13.884,13.706v1.214c-3.499-1.489-7.455-1.561-11-0.22v-0.994c0-7.833-5.929-13.706-13.763-13.706h-27.354c-7.833,0-13.884,5.873-13.884,13.706v15.78c0,7.833,6.051,14.514,13.884,14.514h27.354c7.834,0,13.763-6.681,13.763-14.514v-8.007c3.274-2.459,7.891-2.309,11,0.452v7.555c0,7.833,6.051,14.514,13.884,14.514h27.354c7.834,0,13.763-6.681,13.763-14.514v-15.78C261,164.873,255.071,159,247.237,159z M189,188.486c0,4.532-3.23,8.514-7.763,8.514h-27.354c-4.531,0-7.884-3.981-7.884-8.514v-15.78c0-4.532,3.353-7.706,7.884-7.706H181h0.237c4.532,0,7.763,3.174,7.763,7.706V188.486z M255,188.486c0,4.532-3.23,8.514-7.763,8.514h-27.354c-4.531,0-7.884-3.981-7.884-8.514v-15.78c0-4.532,3.353-7.706,7.884-7.706H247h0.237c4.532,0,7.763,3.174,7.763,7.706V188.486z"/>
+                <path fill="none" stroke="#000000" stroke-width="6" stroke-miterlimit="10" d="M208.506,176.158c-4.578-4.577-11.986-4.577-16.563,0"/>
+                <path d="M247.237,162c4.532,0,7.763,3.174,7.763,7.706v15.78c0,4.532-3.23,8.514-7.763,8.514h-27.354c-4.531,0-7.884-3.981-7.884-8.514v-15.78c0-4.532,3.353-7.706,7.884-7.706H247 M247.237,156h-27.354c-7.833,0-13.884,5.873-13.884,13.706v15.78c0,7.833,6.051,14.514,13.884,14.514h27.354c7.834,0,13.763-6.681,13.763-14.514v-15.78C261,161.873,255.071,156,247.237,156L247.237,156z"/>
+                <path opacity="0.3" fill="#FFFFFF" d="M257,168.327c0-4.599-3.729-8.327-8.329-8.327h-30.342c-4.6,0-8.329,3.728-8.329,8.327v19.346c0,4.599,3.729,8.327,8.329,8.327h30.342c4.6,0,8.329-3.728,8.329-8.327V168.327z"/>
+                <path class="reflection" opacity=".3" fill="#FFFFFF" d="M226.629,160l-13.033,34.105c1.407,1.09,3.168,1.895,5.086,1.895h11.383l13.703-36H226.629z"/>
+                <path d="M181.237,162c4.532,0,7.763,3.174,7.763,7.706v15.78c0,4.532-3.23,8.514-7.763,8.514h-27.354c-4.531,0-7.884-3.981-7.884-8.514v-15.78c0-4.532,3.353-7.706,7.884-7.706H181 M181.237,156h-27.354c-7.833,0-13.884,5.873-13.884,13.706v15.78c0,7.833,6.051,14.514,13.884,14.514h27.354c7.834,0,13.763-6.681,13.763-14.514v-15.78C195,161.873,189.071,156,181.237,156L181.237,156z"/>
+                <path opacity="0.35" fill="#FFFFFF" d="M191,168.327c0-4.599-3.729-8.327-8.329-8.327h-30.342c-4.6,0-8.329,3.728-8.329,8.327v19.346c0,4.599,3.729,8.327,8.329,8.327h30.342c4.6,0,8.329-3.728,8.329-8.327V168.327z"/>
+                <path class="reflection" opacity="0.3" fill="#FFFFFF" d="M160.629,160l-13.033,34.105c1.407,1.09,3.168,1.895,5.086,1.895h11.383l13.703-36H160.629z"/>
+              </g>
+            </g>
+          </g>
+          <rect id="clip" x="11" y="344" fill="#0a0f2e" width="372" height="54"/>
+          <g id="book">
+            <path id="bk_bdy" fill="#31A7DB" d=""/>
+            <path id="bk_edg" fill="none" stroke="#037391" stroke-width="5" stroke-linecap="round" stroke-miterlimit="10" d=""/>
+            <polygon id="btm_pgs" fill="#D3D3D3"/>
+            <polygon id="btm_r" fill="#F2F2F2" points=""/>
+            <polygon id="btm_l" fill="#f0f0f0" points=""/>
+            <polygon id="line" opacity="0" fill="#D3D3D3" points="201,326 198,326 199,299 200,299"/>
+            <path opacity="0" id="pgFld" fill="#f2f2f2" d="M199.235,299c0,0,55.694-1,102-1L354,325c-85.08,0-153.765,1-153.765,1L199.235,299z"></path>
+            <animate xlink:href="#pgFld" attributeName="d" begin="4s" dur="5s" repeatCount="indefinite"
+              keyTimes="0;.03;.06;.1;.15;1"
+              values="M199,299c0,0-55.695-1-102-1l-52.765,27c85.08,0,153.765,1,153.765,1L199,299z;
+                      M199,299c0,0-15.446-45.394-71.818-42.365L99,271c68.5-11.504,99,54.5,99,54.5L199,299z;
+                      M199,299c0,0-1-30-2.352-74.5l-0.371,4.5c5.578,43.393,1.723,97,1.723,97L199,299z;
+                      M199,299c0,0,51.08,6,58.769-47.116l15.36,12.779C273.129,323,198,326,198,326L199,299z;
+                      M199.235,299c0,0,55.694-1,102-1L354,325c-85.08,0-153.765,1-153.765,1L199.235,299z;
+                      M199.235,299c0,0,55.694-1,102-1L354,325c-85.08,0-153.765,1-153.765,1L199.235,299z"/>
+          </g>
+          <g opacity="0.35">
+            <path style="display:none;" class="stars" fill="#FFFFFF" d="M280.252,56.796c0.255-0.466,0.673-0.466,0.928,0l1.214,2.22c0.255,0.466,0.846,1.056,1.312,1.312l2.219,1.213c0.466,0.255,0.466,0.672,0,0.927l-2.219,1.214c-0.466,0.255-1.057,0.845-1.312,1.311l-1.214,2.22c-0.255,0.466-0.673,0.466-0.928,0l-1.213-2.22c-0.255-0.466-0.846-1.056-1.312-1.311l-2.22-1.214c-0.466-0.255-0.466-0.672,0-0.927l2.22-1.214c0.466-0.255,1.057-0.845,1.312-1.311L280.252,56.796z"/>
+            <path style="display:none;" class="stars" fill="#FFFFFF" d="M196.203,37.407c0.219-0.401,0.579-0.401,0.798,0l1.046,1.911c0.219,0.401,0.727,0.909,1.128,1.128l1.909,1.045c0.401,0.219,0.401,0.579,0,0.798l-1.909,1.044c-0.401,0.219-0.909,0.727-1.128,1.128L197,46.374c-0.219,0.401-0.579,0.401-0.798,0l-1.045-1.911c-0.219-0.401-0.727-0.909-1.128-1.128l-1.91-1.044c-0.401-0.219-0.401-0.579,0-0.798l1.91-1.045c0.401-0.219,0.909-0.727,1.128-1.128L196.203,37.407z"/>
+            <path style="display:none;" class="stars" fill="#FFFFFF" d="M44.003,195.166c0.329-0.602,0.868-0.602,1.197,0l1.568,2.867c0.329,0.602,1.091,1.364,1.693,1.693l2.864,1.567c0.602,0.329,0.602,0.868,0,1.197l-2.864,1.566c-0.602,0.329-1.364,1.091-1.693,1.693l-1.568,2.865c-0.329,0.603-0.868,0.603-1.197,0l-1.566-2.865c-0.329-0.603-1.091-1.364-1.693-1.693l-2.865-1.566c-0.602-0.329-0.602-0.868,0-1.197l2.866-1.567c0.602-0.329,1.363-1.091,1.692-1.693L44.003,195.166z"/>
+            <path style="display:none;" class="stars" fill="#FFFFFF" d="M91.01,119.478c0.151-0.277,0.399-0.277,0.551,0l0.722,1.32c0.152,0.277,0.502,0.628,0.78,0.78l1.318,0.721c0.277,0.152,0.277,0.4,0,0.552l-1.318,0.721c-0.277,0.152-0.628,0.502-0.78,0.78l-0.722,1.32c-0.152,0.277-0.4,0.277-0.551,0l-0.722-1.32c-0.151-0.277-0.502-0.628-0.779-0.779l-1.319-0.722c-0.277-0.151-0.277-0.399,0-0.551l1.319-0.722c0.277-0.152,0.628-0.502,0.779-0.78L91.01,119.478z"/>
+            <path style="display:none;" class="stars" fill="#FFFFFF" d="M344.458,162.397c0.18-0.329,0.475-0.33,0.654,0l0.857,1.567c0.18,0.33,0.597,0.746,0.926,0.926l1.565,0.856c0.329,0.18,0.329,0.475,0,0.655l-1.565,0.857c-0.329,0.18-0.746,0.596-0.926,0.926l-0.857,1.567c-0.18,0.33-0.475,0.329-0.654,0l-0.856-1.567c-0.18-0.329-0.597-0.746-0.926-0.926l-1.566-0.857c-0.329-0.18-0.329-0.475,0-0.654l1.566-0.857c0.329-0.18,0.746-0.597,0.926-0.926L344.458,162.397z"/>
+          </g>
+        </svg>
+      </div>
+
+    </div><!-- end mascot wrap -->
+
+  </div><!-- end scene -->
+
+  <!-- CTA area -->
+  <div class="ready-cta">
+    <button class="ready-btn" id="readyBtn" onclick="showModeScreen()">
+      <span class="btn-rocket">🚀</span>
+      Choisir le mode !
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#1a0a00" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="ready-count" id="readyCount">0 images à découvrir</div>
+  </div>
+
+</div>
+
+<!-- ══ MODE SCREEN ══ -->
+<div class="mode-screen" id="modeScreen">
+  <!-- reuse same sky background feel via CSS gradient -->
+  <div class="mode-title">Choisis ton <span>mode de jeu</span> 🎮</div>
+
+  <div class="mode-cards">
+    <!-- Card 1: sans temps -->
+    <div class="mode-card selected" id="modeCardFree" onclick="selectMode('free')">
+      <div class="mode-card-icon">🖱️</div>
+      <div class="mode-card-title">Sans chrono</div>
+      <div class="mode-card-desc">Tu cliques toi-même pour passer à l'image suivante. Prends ton temps !</div>
+    </div>
+    <!-- Card 2: avec temps -->
+    <div class="mode-card" id="modeCardTimer" onclick="selectMode('timer')">
+      <div class="mode-card-icon">⏱️</div>
+      <div class="mode-card-title">Avec chrono</div>
+      <div class="mode-card-desc">Chaque image passe automatiquement après le temps choisi.</div>
+    </div>
+  </div>
+
+  <!-- Timer config panel (hidden until timer mode selected) -->
+  <div class="mode-timer-panel" id="modeTimerPanel">
+    <div class="mode-timer-label">Temps par image : <span id="timerDisplayLabel">3000</span> ms</div>
+    <div class="mode-timer-row">
+      <input class="mode-timer-input" type="number" id="timerInput" value="3000" min="500" max="30000" step="500" placeholder="ex: 3000" oninput="updateTimerLabel()">
+    </div>
+    <div class="mode-timer-presets">
+      <div class="mode-preset" onclick="setPreset(1000)">1 s</div>
+      <div class="mode-preset" onclick="setPreset(2000)">2 s</div>
+      <div class="mode-preset active" onclick="setPreset(3000)">3 s</div>
+      <div class="mode-preset" onclick="setPreset(5000)">5 s</div>
+      <div class="mode-preset" onclick="setPreset(8000)">8 s</div>
+      <div class="mode-preset" onclick="setPreset(10000)">10 s</div>
+    </div>
+  </div>
+
+  <button class="mode-confirm-btn" onclick="confirmMode()">
+    <span>🚀</span> C'est parti !
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#1a0a00" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+
+<!-- ══ REACTIONS ══ -->
+<div class="reaction happy left" id="reactHappyLeft" style="display:none">
+  <svg class="reaction-face" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="55" cy="55" r="52" fill="#d1fae5" stroke="#10b981" stroke-width="4"/>
+    <circle cx="55" cy="55" r="48" fill="#ecfdf5"/>
+    <!-- eyes -->
+    <ellipse cx="38" cy="44" rx="7" ry="8" fill="white" stroke="#10b981" stroke-width="1.5"/>
+    <ellipse cx="72" cy="44" rx="7" ry="8" fill="white" stroke="#10b981" stroke-width="1.5"/>
+    <circle cx="40" cy="46" r="5" fill="#065f46"/>
+    <circle cx="74" cy="46" r="5" fill="#065f46"/>
+    <circle cx="42" cy="44" r="2" fill="white"/>
+    <circle cx="76" cy="44" r="2" fill="white"/>
+    <!-- eyebrows happy -->
+    <path d="M30 35 Q38 30 46 35" stroke="#065f46" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M64 35 Q72 30 80 35" stroke="#065f46" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <!-- big smile -->
+    <path d="M28 64 Q55 88 82 64" stroke="#059669" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <!-- cheeks -->
+    <ellipse cx="24" cy="65" rx="10" ry="7" fill="#f0fdf4" opacity="0.8"/>
+    <circle cx="24" cy="65" r="7" fill="#bbf7d0" opacity="0.7"/>
+    <ellipse cx="86" cy="65" rx="10" ry="7" fill="#f0fdf4" opacity="0.8"/>
+    <circle cx="86" cy="65" r="7" fill="#bbf7d0" opacity="0.7"/>
+    <!-- stars around -->
+    <path d="M6 16L7.2 20H11.5L8 22.5L9.2 26.5L6 24L2.8 26.5L4 22.5L0.5 20H4.8Z" fill="#fbbf24"/>
+    <path d="M104 18L105 21H108.5L106 23L107 26L104 24L101 26L102 23L99.5 21H103Z" fill="#fbbf24"/>
+    <path d="M16 92L17 95H20L17.8 96.8L18.6 100L16 98.2L13.4 100L14.2 96.8L12 95H15Z" fill="#34d399" opacity="0.8"/>
+  </svg>
+  <span class="reaction-label">Bravo ! 🌟</span>
+</div>
+
+<div class="reaction happy right" id="reactHappyRight" style="display:none">
+  <svg class="reaction-face" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="55" cy="55" r="52" fill="#d1fae5" stroke="#10b981" stroke-width="4"/>
+    <circle cx="55" cy="55" r="48" fill="#ecfdf5"/>
+    <ellipse cx="38" cy="44" rx="7" ry="8" fill="white" stroke="#10b981" stroke-width="1.5"/>
+    <ellipse cx="72" cy="44" rx="7" ry="8" fill="white" stroke="#10b981" stroke-width="1.5"/>
+    <circle cx="40" cy="46" r="5" fill="#065f46"/>
+    <circle cx="74" cy="46" r="5" fill="#065f46"/>
+    <circle cx="42" cy="44" r="2" fill="white"/>
+    <circle cx="76" cy="44" r="2" fill="white"/>
+    <path d="M30 35 Q38 30 46 35" stroke="#065f46" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M64 35 Q72 30 80 35" stroke="#065f46" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M28 64 Q55 88 82 64" stroke="#059669" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <circle cx="24" cy="65" r="7" fill="#bbf7d0" opacity="0.7"/>
+    <circle cx="86" cy="65" r="7" fill="#bbf7d0" opacity="0.7"/>
+    <path d="M96 8L97.5 13H103L99 16L100.5 21L96 18L91.5 21L93 16L89 13H94.5Z" fill="#fbbf24"/>
+    <path d="M8 18L9 21H12L9.8 22.8L10.6 26L8 24.2L5.4 26L6.2 22.8L4 21H7Z" fill="#34d399" opacity="0.8"/>
+  </svg>
+  <span class="reaction-label">Super ! ⭐</span>
+</div>
+
+<div class="reaction angry left" id="reactAngryLeft" style="display:none">
+  <svg class="reaction-face" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="55" cy="55" r="52" fill="#fee2e2" stroke="#ef4444" stroke-width="4"/>
+    <circle cx="55" cy="55" r="48" fill="#fff1f2"/>
+    <!-- steam on top -->
+    <path d="M30 18 Q32 12 34 18 Q36 12 38 18" stroke="#ef4444" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7"/>
+    <path d="M72 18 Q74 12 76 18 Q78 12 80 18" stroke="#ef4444" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7"/>
+    <!-- angry eyebrows -->
+    <path d="M29 36 Q38 30 45 36" stroke="#991b1b" stroke-width="4" stroke-linecap="round" fill="none" transform="rotate(15 37 33)"/>
+    <path d="M65 36 Q72 30 81 36" stroke="#991b1b" stroke-width="4" stroke-linecap="round" fill="none" transform="rotate(-15 73 33)"/>
+    <!-- eyes angry -->
+    <ellipse cx="38" cy="46" rx="7" ry="6" fill="white" stroke="#ef4444" stroke-width="1.5"/>
+    <ellipse cx="72" cy="46" rx="7" ry="6" fill="white" stroke="#ef4444" stroke-width="1.5"/>
+    <circle cx="40" cy="47" r="4.5" fill="#7f1d1d"/>
+    <circle cx="74" cy="47" r="4.5" fill="#7f1d1d"/>
+    <circle cx="42" cy="45" r="1.5" fill="white"/>
+    <circle cx="76" cy="45" r="1.5" fill="white"/>
+    <!-- frown -->
+    <path d="M32 76 Q55 62 78 76" stroke="#dc2626" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <!-- red cheeks angry -->
+    <circle cx="22" cy="62" r="8" fill="#fecaca" opacity="0.8"/>
+    <circle cx="88" cy="62" r="8" fill="#fecaca" opacity="0.8"/>
+    <!-- sweat drop -->
+    <path d="M98 35 Q100 28 102 35 Q102 40 100 40 Q98 40 98 35Z" fill="#bfdbfe"/>
+  </svg>
+  <span class="reaction-label">À revoir !</span>
+</div>
+
+<div class="reaction angry right" id="reactAngryRight" style="display:none">
+  <svg class="reaction-face" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="55" cy="55" r="52" fill="#fee2e2" stroke="#ef4444" stroke-width="4"/>
+    <circle cx="55" cy="55" r="48" fill="#fff1f2"/>
+    <path d="M30 18 Q32 12 34 18 Q36 12 38 18" stroke="#ef4444" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7"/>
+    <path d="M72 18 Q74 12 76 18 Q78 12 80 18" stroke="#ef4444" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7"/>
+    <path d="M29 36 Q38 30 45 36" stroke="#991b1b" stroke-width="4" stroke-linecap="round" fill="none" transform="rotate(15 37 33)"/>
+    <path d="M65 36 Q72 30 81 36" stroke="#991b1b" stroke-width="4" stroke-linecap="round" fill="none" transform="rotate(-15 73 33)"/>
+    <ellipse cx="38" cy="46" rx="7" ry="6" fill="white" stroke="#ef4444" stroke-width="1.5"/>
+    <ellipse cx="72" cy="46" rx="7" ry="6" fill="white" stroke="#ef4444" stroke-width="1.5"/>
+    <circle cx="40" cy="47" r="4.5" fill="#7f1d1d"/>
+    <circle cx="74" cy="47" r="4.5" fill="#7f1d1d"/>
+    <circle cx="42" cy="45" r="1.5" fill="white"/>
+    <circle cx="76" cy="45" r="1.5" fill="white"/>
+    <path d="M32 76 Q55 62 78 76" stroke="#dc2626" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <circle cx="22" cy="62" r="8" fill="#fecaca" opacity="0.8"/>
+    <circle cx="88" cy="62" r="8" fill="#fecaca" opacity="0.8"/>
+    <path d="M8 35 Q10 28 12 35 Q12 40 10 40 Q8 40 8 35Z" fill="#bfdbfe"/>
+  </svg>
+  <span class="reaction-label">Continue ! 💪</span>
+</div>
+
+<!-- ══ MAIN APP ══ -->
+<div class="topbar">
+  <a href="Menu_Application_Image_En_Click.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Retour
+  </a>
+  <div class="topbar-center">
+    <span class="topbar-school">Unité Bghadda · S.S.Mouaraa</span>
+    <span class="topbar-theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3L22 9V20H16V14H8V20H2V9Z" fill="#fbbf24" stroke="#f59e0b" stroke-width="1.5"/><circle cx="12" cy="8" r="2" fill="#f59e0b"/></svg><span id="topTheme">Vocabulaire</span></span>
+  </div>
+  <div class="topbar-right" id="topCount">0/0</div>
+  <div style="position:absolute;bottom:-20px;left:0;width:100%;height:18px;overflow:hidden;pointer-events:none">
+    <div class="topbar-ticker" id="ticker"></div>
+  </div>
+</div>
+
+<div class="theme-badge" id="themeBadge" style="display:none">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="#2563eb" stroke-width="2"/></svg>
+  <span id="themeLabel">Thème</span>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5Z" fill="#fbbf24"/></svg>
+</div>
+
+<div class="score-bar">
+  <div class="sc ok"><svg class="ico" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" fill="#d1fae5" stroke="#10b981" stroke-width="2"/><path d="M8 14L12 18L20 10" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div style="display:flex;flex-direction:column;gap:1px"><span class="lbl">Je sais !</span><span class="num" id="numOk">0</span></div></div>
+  <div class="prog-area"><div class="prog-wrap"><div class="prog-bar" id="progBar"></div></div><span class="prog-label" id="progLbl">0 image sur 0</span></div>
+  <div class="sc ko"><svg class="ico" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/><path d="M9 9L19 19M19 9L9 19" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/></svg><div style="display:flex;flex-direction:column;gap:1px"><span class="lbl">Pas encore</span><span class="num" id="numKo">0</span></div></div>
+</div>
+
+<div class="star-counter" id="starCounter" style="display:none"></div>
+
+<!-- Timer bar (only visible in timer mode) -->
+<div class="timer-bar-wrap" id="timerBarWrap">
+  <div class="timer-bar-track">
+    <div class="timer-bar-fill" id="timerBarFill"></div>
+  </div>
+  <div class="timer-label-row">
+    <span class="timer-secs" id="timerSecsLabel">3.0 s</span>
+    <span style="font-size:0.75rem;font-weight:800;color:var(--muted)">⏱ Auto-passage</span>
+  </div>
+</div>
+
+
+<div class="stage">
+  <div class="img-card" id="imgCard" onclick="handleClick()" style="display:none">
+    <svg class="card-deco tl" width="36" height="36" viewBox="0 0 36 36" fill="none"><path d="M18 4L20.5 12.5L29 15L20.5 17.5L18 26L15.5 17.5L7 15L15.5 12.5Z" fill="#fbbf24" opacity="0.7"/></svg>
+    <svg class="card-deco br" width="30" height="30" viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="12" fill="#dbeafe" stroke="#93c5fd" stroke-width="2"/><path d="M15 8L16.5 12.5L21 14L16.5 15.5L15 20L13.5 15.5L9 14L13.5 12.5Z" fill="#3b82f6"/></svg>
+    <img id="mainImg" src="" alt="vocabulaire">
+    <span class="click-tip" id="clickTip">Clique pour passer !</span>
+  </div>
+  <div class="finish-screen" id="finishScreen">
+    <div class="finish-card">
+      <svg class="fc-deco tl" width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="4" y="4" width="36" height="36" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="2"/><rect x="10" y="14" width="24" height="2" rx="1" fill="#3b82f6"/><rect x="10" y="20" width="18" height="2" rx="1" fill="#93c5fd"/><rect x="10" y="26" width="12" height="2" rx="1" fill="#bfdbfe"/></svg>
+      <svg class="fc-deco tr" width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M22 6L25 16L35 19L25 22L22 32L19 22L9 19L19 16Z" fill="#fbbf24"/></svg>
+      <div class="f-emoji-wrap"><div class="cheer-row" id="cheerRow"></div><div class="f-emoji" id="fEmoji">🎉</div></div>
+      <div class="f-title">Bravo, champion·ne !</div>
+      <div class="f-score-ring"><span class="f-score-num" id="fScore">0</span><span class="f-score-lbl">Points</span></div>
+      <div class="f-stats">
+        <div class="f-stat fs-ok"><span class="sv" id="fOk">0</span><span class="sl">Je sais ✅</span></div>
+        <div class="f-stat fs-ko"><span class="sv" id="fKo">0</span><span class="sl">À revoir ❌</span></div>
+        <div class="f-stat fs-pct"><span class="sv" id="fPct">0%</span><span class="sl">Score 🎯</span></div>
+      </div>
+      <div class="f-msg" id="fMsg">Excellent travail !</div>
+    </div>
+  </div>
+  <div class="empty-state" id="emptyState">
+    <div class="big">😕</div>
+    <h2>Aucun thème sélectionné</h2>
+    <p>Retournez au menu et choisissez un thème.</p>
+    <a href="Menu_Application_Image_En_Click.html" class="btn-restart btn-r1" style="text-decoration:none;display:inline-flex;margin-top:8px">← Retour au menu</a>
+  </div>
+</div>
+
+<div class="actions" id="actionsEl" style="display:none">
+  <button class="btn btn-correct" id="btnOk" onclick="marquerOk()" disabled>
+    <svg class="btn-icon" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" fill="rgba(255,255,255,0.25)"/><path d="M7 14L11 18L21 9" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Je sais !
+  </button>
+  <button class="btn btn-wrong" id="btnKo" onclick="marquerKo()" disabled>
+    <svg class="btn-icon" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" fill="rgba(255,255,255,0.25)"/><path d="M9 9L19 19M19 9L9 19" stroke="white" stroke-width="3" stroke-linecap="round"/></svg>
+    Pas encore
+  </button>
+</div>
+
+<div class="restart-area" id="restartEl">
+  <button class="btn-revision" id="btnRevision" onclick="openRevision()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="rgba(255,255,255,0.25)"/><path d="M8 8h5a3 3 0 0 1 0 6H8V8z" fill="white"/><path d="M13 17l3-3-3-3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Réviser mes erreurs
+    <span id="revisionCount" style="background:rgba(255,255,255,0.3);border-radius:20px;padding:1px 8px;font-size:0.85rem">0</span>
+  </button>
+  <button class="btn-restart btn-r1" onclick="relancer()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M1 4v6h6M23 20v-6h-6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Recommencer
+  </button>
+  <a href="Menu_Application_Image_En_Click.html" class="btn-restart btn-r2">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/></svg>
+    Choisir un thème
+  </a>
+</div>
+
+<!-- REVISION OVERLAY -->
+<div class="revision-overlay" id="revisionOverlay">
+  <div class="revision-panel">
+    <div class="revision-header">
+      <h2>
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" fill="rgba(255,255,255,0.2)"/><path d="M9 9h5a3.5 3.5 0 0 1 0 7H9V9z" fill="white"/><path d="M15 19l3-3-3-3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Images à réviser
+      </h2>
+      <button class="rev-close" onclick="closeRevision()">✕</button>
+    </div>
+    <div class="revision-subtitle">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fee2e2"/><path d="M8 8l8 8M16 8l-8 8" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/></svg>
+      Images non connues — à retravailler !
+      <span class="rev-count-badge" id="revCountBadge">0 image</span>
+    </div>
+    <div class="revision-grid" id="revisionGrid"></div>
+    <div class="revision-footer">
+      <button class="btn-rev-action btn-rev-replay" onclick="relancerErreurs()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M1 4v6h6M5.64 5.64A9 9 0 0 1 20.49 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Refaire les erreurs
+      </button>
+      <button class="btn-rev-action btn-rev-close2" onclick="closeRevision()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+<footer class="school-footer">
+  <p>🏫 Unité Bghadda · S.S.Mouaraa &nbsp;|&nbsp; Application pédagogique – Vocabulaire Français &nbsp;|&nbsp; 📚 Apprends en jouant !</p>
+</footer>
+
+<script>
+const themes={adjectifs_qualificatifs:['1_adjectifs_qualificatifs/agreable.png','1_adjectifs_qualificatifs/agressif.png','1_adjectifs_qualificatifs/ancien.png','1_adjectifs_qualificatifs/bon.png','1_adjectifs_qualificatifs/chaud.jpg','1_adjectifs_qualificatifs/content.png','1_adjectifs_qualificatifs/courageux.png','1_adjectifs_qualificatifs/court.png','1_adjectifs_qualificatifs/dangereux.png','1_adjectifs_qualificatifs/delicieux.png','1_adjectifs_qualificatifs/difficile.png','1_adjectifs_qualificatifs/drole.jpg','1_adjectifs_qualificatifs/dur.jpg','1_adjectifs_qualificatifs/elegent.png','1_adjectifs_qualificatifs/en colere.png','1_adjectifs_qualificatifs/fache.png','1_adjectifs_qualificatifs/facile.png','1_adjectifs_qualificatifs/faible.jpg','1_adjectifs_qualificatifs/fatigue.png','1_adjectifs_qualificatifs/fidele.png','1_adjectifs_qualificatifs/fier.png','1_adjectifs_qualificatifs/fort.jpg','1_adjectifs_qualificatifs/fou.png','1_adjectifs_qualificatifs/frais.jpg','1_adjectifs_qualificatifs/gourmand.png','1_adjectifs_qualificatifs/grand.png','1_adjectifs_qualificatifs/gros.png','1_adjectifs_qualificatifs/intelligent.png','1_adjectifs_qualificatifs/jeune.png','1_adjectifs_qualificatifs/joli.png','1_adjectifs_qualificatifs/laide.png','1_adjectifs_qualificatifs/leger.jpg','1_adjectifs_qualificatifs/lent.png','1_adjectifs_qualificatifs/loin.png','1_adjectifs_qualificatifs/long.png','1_adjectifs_qualificatifs/lourd.jpg','1_adjectifs_qualificatifs/maigre.png','1_adjectifs_qualificatifs/malade.png','1_adjectifs_qualificatifs/mauvais.png','1_adjectifs_qualificatifs/mou.jpg','1_adjectifs_qualificatifs/mouille.png','1_adjectifs_qualificatifs/paresseux.png','1_adjectifs_qualificatifs/pauvre.png','1_adjectifs_qualificatifs/petit.png','1_adjectifs_qualificatifs/peureux.png','1_adjectifs_qualificatifs/plein.png','1_adjectifs_qualificatifs/proche.png','1_adjectifs_qualificatifs/propre.png','1_adjectifs_qualificatifs/rapide.png','1_adjectifs_qualificatifs/riche.png','1_adjectifs_qualificatifs/sale.png','1_adjectifs_qualificatifs/sec.png','1_adjectifs_qualificatifs/serieux.png','1_adjectifs_qualificatifs/stupide.png','1_adjectifs_qualificatifs/surpris.png','1_adjectifs_qualificatifs/timide.png','1_adjectifs_qualificatifs/triste.png','1_adjectifs_qualificatifs/vide.png','1_adjectifs_qualificatifs/vieux.png','1_adjectifs_qualificatifs/belle.png','1_adjectifs_qualificatifs/heureux.png','1_adjectifs_qualificatifs/neuf.png','1_adjectifs_qualificatifs/froid.jpg'],Alimentation:['8_alimentation/viande.png','8_alimentation/z chou.png','8_alimentation/z miel.png','8_alimentation/z riz.png','8_alimentation/z fain.png','8_alimentation/ail.png','8_alimentation/aubergine1.jpeg','8_alimentation/baguette.png','8_alimentation/beurre.png','8_alimentation/boisson.png','8_alimentation/carotte.png','8_alimentation/cerfeuil.png','8_alimentation/champignon.png','8_alimentation/citron.png','8_alimentation/courgette.png','8_alimentation/datte.png','8_alimentation/diner.png','8_alimentation/farine.png','8_alimentation/fraise.png','8_alimentation/fromage.png','8_alimentation/fruits.png','8_alimentation/grenade.png','8_alimentation/huile_dolive.jpg','8_alimentation/Le_dejeuner.jpg','8_alimentation/le_petit_dejeuner.png','8_alimentation/legumes.png','8_alimentation/oignon.png','8_alimentation/olives.png','8_alimentation/orange.png','8_alimentation/pain.png','8_alimentation/pasteque.png','8_alimentation/peche.png','8_alimentation/petit_pois.png','8_alimentation/poire.png','8_alimentation/pomme_2.png','8_alimentation/pomme_de_terre.png','8_alimentation/poulet.png','8_alimentation/radis.png','8_alimentation/raisin.png','8_alimentation/frite.png','8_alimentation/salade.png','8_alimentation/sucre.png','8_alimentation/tomate.png','8_alimentation/melon.png','8_alimentation/poivron.png'],ecole_et_coleur:['3_école_couleur/alphabet.png','3_école_couleur/apprendre.png','3_école_couleur/ardoise.png','3_école_couleur/bureau.png','3_école_couleur/camarade.png','3_école_couleur/cartable 2.png','3_école_couleur/carte.png','3_école_couleur/chaise.png','3_école_couleur/ciseau.png','3_école_couleur/cloche.png','3_école_couleur/cole.png','3_école_couleur/cour de récréation.jpg','3_école_couleur/craie.png','3_école_couleur/crayon_(5).png','3_école_couleur/drapeau.png','3_école_couleur/école.jpg','3_école_couleur/eleve.png','3_école_couleur/fenêtre.png','3_école_couleur/crayon de couleur.png','3_école_couleur/La gomme.png','3_école_couleur/la trousse.jpg','3_école_couleur/nombre.png','3_école_couleur/papier.jpg','3_école_couleur/porte.png','3_école_couleur/punaise 2.png','3_école_couleur/règle.png','3_école_couleur/Stylo.jpg','3_école_couleur/tableau.png','3_école_couleur/tablier.png','3_école_couleur/taille crayon.png','3_école_couleur/z coul blanc.png','3_école_couleur/z coul bleu.png','3_école_couleur/z coul jaune.png','3_école_couleur/z coul marron.png','3_école_couleur/z coul noir.png','3_école_couleur/z coul orange.png','3_école_couleur/z coul rose.png','3_école_couleur/z coul rouge.png','3_école_couleur/z coul violet.png','3_école_couleur/z coul vert.png'],animaux:['2_animaux/animal.jpg','2_animaux/loup.png','2_animaux/agneau.png','2_animaux/abeille.png','2_animaux/aigle.png','2_animaux/ane.png','2_animaux/arraignee.png','2_animaux/autruche.png','2_animaux/baleine.png','2_animaux/chat.png','2_animaux/cheval.png','2_animaux/chevre.png','2_animaux/chien.png','2_animaux/cigogne.png','2_animaux/cochon.png','2_animaux/coq.png','2_animaux/crocodile.png','2_animaux/dromadaire.png','2_animaux/elephant.png','2_animaux/escargot.png','2_animaux/fourmi.png','2_animaux/gazelle.png','2_animaux/girafe.png','2_animaux/gorille.png','2_animaux/hibou.png','2_animaux/kangaurou.png','2_animaux/lapin.png','2_animaux/lion.png','2_animaux/mouton.png','2_animaux/oiseau.png','2_animaux/ours.png','2_animaux/papillon.png','2_animaux/poisson.png','2_animaux/poule.png','2_animaux/renard.png','2_animaux/serpent.png','2_animaux/singe.png','2_animaux/tigre.png','2_animaux/tortue.png','2_animaux/vache.png','2_animaux/zebre.png','2_animaux/coccinelle.png','2_animaux/grenouille.png','2_animaux/dauphin.png','2_animaux/requin.png'],corps_hummain:['4_corps_hummain/barbe.png','4_corps_hummain/cheveux.png','4_corps_hummain/menton.png','4_corps_hummain/coeur.png','4_corps_hummain/cou.png','4_corps_hummain/dent.png','4_corps_hummain/epaule.png','4_corps_hummain/estomaque.png','4_corps_hummain/euil.png','4_corps_hummain/joue.png','4_corps_hummain/la_langue.png','4_corps_hummain/la_tete.png','4_corps_hummain/la_ventre.jpg','4_corps_hummain/le_visage.png','4_corps_hummain/le_bras.png','4_corps_hummain/le_coude.png','4_corps_hummain/le_doigt.png','4_corps_hummain/le_front.png','4_corps_hummain/le_genou.png','4_corps_hummain/le_nez.png','4_corps_hummain/le_pied.png','4_corps_hummain/les_jambes.png','4_corps_hummain/levres.png','4_corps_hummain/main.png','4_corps_hummain/ongle.png','4_corps_hummain/os.png','4_corps_hummain/sourcil.png','4_corps_hummain/squelette.png','4_corps_hummain/une_tresse.png','4_corps_hummain/une_oreille.png','4_corps_hummain/la_bouche.png'],maison:['5_maison/placard.png','5_maison/appartement.png','5_maison/couloir.png','5_maison/cuisine.png','5_maison/jouets.png','5_maison/aiguille.png','5_maison/armoire.png','5_maison/baignoire.png','5_maison/balai.png','5_maison/canape.png','5_maison/chambre.jpg','5_maison/cle.png','5_maison/coussin.png','5_maison/echelle.png','5_maison/escalier.png','5_maison/fauteuil.png','5_maison/horloge.png','5_maison/immeuble.png','5_maison/lampe.png','5_maison/lit.png','5_maison/maison.png','5_maison/marteau.png','5_maison/Miroir.png','5_maison/mur.png','5_maison/oreiller.png','5_maison/peigne.png','5_maison/rideau.png','5_maison/salle_de_bain.png','5_maison/tele.jfif','5_maison/telephone.png','5_maison/volet.png'],metiers_et_professions:['9 metiers_et_professions/architecte.png','9 metiers_et_professions/avocat.png','9 metiers_et_professions/boucher1.jpg','9 metiers_et_professions/coiffeur.png','9 metiers_et_professions/dentiste.jpg','9 metiers_et_professions/electricien.png','9 metiers_et_professions/enseignant.jpg','9 metiers_et_professions/fermier.png','9 metiers_et_professions/infirmiere.jpg','9 metiers_et_professions/jardinier.jpg','9 metiers_et_professions/medecin.png','9 metiers_et_professions/menuisier.jpg','9 metiers_et_professions/musicien.png','9 metiers_et_professions/pilote.jpg','9 metiers_et_professions/pompier.png','9 metiers_et_professions/soldat.jpg','9 metiers_et_professions/veterinaire.png','9 metiers_et_professions/maitresse.png','9 metiers_et_professions/mecanicien.jpg'],transport:['10 transport/aeroport.png','10 transport/ambulance.png','10 transport/avion.png','10 transport/barque.png','10 transport/bateau.png','10 transport/bus.png','10 transport/gare.png','10 transport/helicoptere.png','10 transport/moto.png','10 transport/navire.png','10 transport/train.png','10 transport/velo.png','10 transport/voiture.gif'],cuisine:['6 cuisine et toilette/bol.png','6 cuisine et toilette/brosse_a_dents.png','6 cuisine et toilette/casserole.png','6 cuisine et toilette/couteau.png','6 cuisine et toilette/dentifrice.png','6 cuisine et toilette/eau.png','6 cuisine et toilette/four.png','6 cuisine et toilette/fourchette.png','6 cuisine et toilette/gel_douche.png','6 cuisine et toilette/lavabo.png','6 cuisine et toilette/machine_a_laver.png','6 cuisine et toilette/marmite.png','6 cuisine et toilette/panier.png','6 cuisine et toilette/réfrigérateur.png','6 cuisine et toilette/robinet.png','6 cuisine et toilette/savonette.png','6 cuisine et toilette/table.png','6 cuisine et toilette/verre.png','6 cuisine et toilette/z assiette.png','6 cuisine et toilette/z cuillère 1.png','6 cuisine et toilette/z cuisinière.png'],préposition_de_lieu:['13_les_prépositions_de_lieu/uu après.jpg','13_les_prépositions_de_lieu/uu avant.jpg','13_les_prépositions_de_lieu/y à coté de.jpg','13_les_prépositions_de_lieu/y à droite de .jpg','13_les_prépositions_de_lieu/y à gauche.jpg','13_les_prépositions_de_lieu/y au dessus.jpg','13_les_prépositions_de_lieu/y au milieu de .png','13_les_prépositions_de_lieu/y dans.jpg','13_les_prépositions_de_lieu/y derrière.jpg','13_les_prépositions_de_lieu/y dessous.jpg','13_les_prépositions_de_lieu/y devant.jpg','13_les_prépositions_de_lieu/y en face de.jpg','13_les_prépositions_de_lieu/y entre_out.jpg','13_les_prépositions_de_lieu/y pendant.png'],lieu:['12 les lieux/aéroport.png','12 les lieux/bibliotheque.jpg','12 les lieux/boulanger.jpg','12 les lieux/boutique.png','12 les lieux/ferme.png','12 les lieux/hopital.png','12 les lieux/hotel.png','12 les lieux/magasin.png','12 les lieux/mosqué.jpg','12 les lieux/musée.png','12 les lieux/pharmacie.jpg','12 les lieux/port.png','12 les lieux/restaurant.png','12 les lieux/rue.png','12 les lieux/stade.png','12 les lieux/usine.png'],famille:[],vetement:['10 vetement/bague.png','10 vetement/bonnet.png','10 vetement/bottes.png','10 vetement/casquette.png','10 vetement/chapeau.jpg','10 vetement/chaussette.png','10 vetement/chaussure.png','10 vetement/chemise.png','10 vetement/cravate.png','10 vetement/foulard.png','10 vetement/gants.png','10 vetement/jupe.png','10 vetement/lunette.png','10 vetement/manteau.png','10 vetement/pantalon.png','10 vetement/pull.png','10 vetement/robe.png','10 vetement/tee_shirt.png','10 vetement/echarpe.png'],
+verbes:['11_verbes/1 Souligner.jpg','11_verbes/1 terminer.png','11_verbes/1 tracer.png','11_verbes/2 accrocher.png','11_verbes/2 attacher.png','11_verbes/ajouter.png','11_verbes/aller au travail.png','11_verbes/alumer.png','11_verbes/amener.png','11_verbes/appeler.png','11_verbes/arrosser.png','11_verbes/arréter.png','11_verbes/attraper.png','11_verbes/balayer.png','11_verbes/boire.png','11_verbes/brosser.png','11_verbes/cacher.png','11_verbes/calculer.png','11_verbes/casser.png','11_verbes/chanter.png','11_verbes/charger.png','11_verbes/chauffer.png','11_verbes/chercher.png','11_verbes/choisir.png','11_verbes/classer.png','11_verbes/cocher.png','11_verbes/colorer.png','11_verbes/commencer.jpg','11_verbes/comper.png','11_verbes/compter.png','11_verbes/conduire.png','11_verbes/construire.png','11_verbes/coudre.png','11_verbes/couper.png','11_verbes/creuser.png','11_verbes/cuisiner.png','11_verbes/danser.png','11_verbes/demander.png','11_verbes/descendre.png','11_verbes/disputer.png','11_verbes/distribuer.png','11_verbes/donner.png','11_verbes/dormir.png','11_verbes/déchirer.png','11_verbes/effacer.png','11_verbes/encourager.png','11_verbes/enlever.png','11_verbes/enterrer.png','11_verbes/entrer.png','11_verbes/expliquer.png','11_verbes/fabriquer.jpg','11_verbes/faire la visselle.png','11_verbes/fermer.png','11_verbes/habiter.png','11_verbes/hbiller.jpg','11_verbes/inviter.png','11_verbes/jeter.png','11_verbes/jouer.png','11_verbes/juger.png','11_verbes/Lancer.png','11_verbes/laver.png','11_verbes/lever.png','11_verbes/lire.png','11_verbes/manger.png','11_verbes/mettre.png','11_verbes/monter.png','11_verbes/montrer.png','11_verbes/mésurer.png','11_verbes/nettoyer.png','11_verbes/orner.png','11_verbes/ouvrir.png','11_verbes/parler.png','11_verbes/partager.png','11_verbes/partir.jpg','11_verbes/penser.png','11_verbes/peser.png','11_verbes/planter.png','11_verbes/pleurer.png','11_verbes/plier.png','11_verbes/plonger.png','11_verbes/polluer.png','11_verbes/porter.png','11_verbes/poser.png','11_verbes/pousser.png','11_verbes/prier.png','11_verbes/punir.png','11_verbes/pêcher.png','11_verbes/raconter.png','11_verbes/ramasser.png','11_verbes/ranger.png','11_verbes/refléchir.png','11_verbes/regarder.png','11_verbes/relier.png','11_verbes/remplir.png','11_verbes/reuser.png','11_verbes/rire.png','11_verbes/rire1.png','11_verbes/réparer.png','11_verbes/réussir.png','11_verbes/réver.png','11_verbes/rôtir.png','11_verbes/sauter.jpg','11_verbes/semer.png','11_verbes/soigner.png','11_verbes/sortir.png','11_verbes/soufler.png','11_verbes/Souligner.jpg','11_verbes/taper.png','11_verbes/tenir.png','11_verbes/tirer.png','11_verbes/tomber.png','11_verbes/toucher.png','11_verbes/tourner.png','11_verbes/transporter.png','11_verbes/travailler.png','11_verbes/traverser.png','11_verbes/trouver.png','11_verbes/vendre.png','11_verbes/venir.png','11_verbes/vider.png','11_verbes/voir.jpg','11_verbes/voler.png','11_verbes/voyager.png','11_verbes/écouter.png','11_verbes/écrire.png','11_verbes/éteindre.png','11_verbes/éviter.png','11_verbes/éxaminer.png']};
+
+const themeLabels={maison:'La Maison',Alimentation:'Alimentation',corps_hummain:'Corps humain',adjectifs_qualificatifs:'Adjectifs',famille:'Famille',animaux:'Animaux',cuisine:'Cuisine',metiers_et_professions:'Métiers',transport:'Transport',vetement:'Vêtements',lieu:'Lieux','préposition_de_lieu':'Prépositions',ecole_et_coleur:'École & Couleurs',verbes:'Les Verbes'};
+
+const readyMessages=[
+  {title:'Tu es prêt(e) ?',msg:'Concentre-toi bien ! Regarde chaque image et dis si tu connais le mot.'},
+  {title:'Attention, on commence !',msg:'Regarde l\'image, réfléchis, puis clique sur le bon bouton. Tu peux le faire !'},
+  {title:'En forme aujourd\'hui ?',msg:'Chaque image que tu connais, c\'est un point de plus ! Allez, champion !'},
+  {title:'C\'est l\'heure d\'apprendre !',msg:'Prends ton temps avec chaque image. Ce n\'est pas grave de ne pas tout savoir !'},
+  {title:'Prêt(e) pour le défi ?',msg:'Plus tu t\'exerces, mieux tu mémorises ! On y va ensemble !'},
+];
+
+const msgs={perfect:['PARFAIT ! 100% ! Tu es un vrai champion !','INCROYABLE ! Score parfait ! Bravo !'],great:['Excellent travail ! Tu progresses très bien !','Très bien fait ! Tu maîtrises ce thème !'],ok:['Pas mal ! Continue, tu vas y arriver !','Bien ! Encore un peu et ce sera parfait !'],low:['Continue de t\'exercer, ne lâche pas !','Chaque erreur est une leçon ! Recommence !']};
+
+let imgs=[],rem=[],total=0,nOk=0,nKo=0,themeName='',wrongImgs=[];
+let reactionTimer=null;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+
+function buildTicker(){
+  const ticker=document.getElementById('ticker');
+  const items=['Apprendre','Progresser','Chaque jour','Bravo!','École','Champion','Vocabulaire','Super!'];
+  const full=[...items,...items,...items,...items];
+  full.forEach(l=>{const d=document.createElement('div');d.className='tick-item';d.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5Z" fill="#fbbf24"/></svg> '+l;ticker.appendChild(d);});
+}
+
+function buildStarCounter(n){
+  const sc=document.getElementById('starCounter');
+  const show=Math.min(n,12);sc.innerHTML='';
+  for(let i=0;i<show;i++){const s=document.createElement('div');s.className='star-item';s.innerHTML='<svg viewBox="0 0 24 24" fill="none"><path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="0.5"/></svg>';sc.appendChild(s);}
+  if(n>12){const more=document.createElement('span');more.style.cssText='font-size:12px;font-weight:800;color:#6b7280;font-family:Nunito,sans-serif';more.textContent='+'+(n-12);sc.appendChild(more);}
+}
+
+function litStars(n){
+  document.querySelectorAll('.star-item').forEach((s,i)=>{
+    if(i<n){s.classList.add('lit');s.innerHTML='<svg viewBox="0 0 24 24" fill="none"><path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5Z" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.5"/></svg>';}
+    else{s.classList.remove('lit');s.innerHTML='<svg viewBox="0 0 24 24" fill="none"><path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="0.5"/></svg>';}
+  });
+}
+
+// ── READY SCREEN ──
+function showReadyScreen(t){
+  // Hide game elements while on ready/mode screen
+  document.getElementById('imgCard').style.display='none';
+  document.getElementById('actionsEl').style.display='none';
+  document.getElementById('clickTip').style.display='none';
+  document.getElementById('themeBadge').style.display='none';
+  document.getElementById('starCounter').style.display='none';
+
+  const list=(themes[t]||[]).filter(x=>x.trim()!=='');
+  themeName=t;
+  imgs=[...list]; shuffle(imgs); rem=[...imgs]; total=imgs.length; nOk=0; nKo=0; wrongImgs=[];
+
+  // build background stars
+  const starsEl=document.getElementById('readyStars');
+  starsEl.innerHTML='';
+  for(let i=0;i<40;i++){
+    const s=document.createElement('div');
+    s.className='rstar';
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${2+Math.random()*5}px;height:${2+Math.random()*5}px;--d:${2+Math.random()*4}s;--del:${-Math.random()*4}s`;
+    starsEl.appendChild(s);
+  }
+
+  const msg=readyMessages[Math.floor(Math.random()*readyMessages.length)];
+  document.getElementById('readyThemeName').textContent=(themeLabels[t]||t);
+  document.getElementById('readyBubbleTitle').textContent=msg.title;
+  document.getElementById('readyBubbleMsg').textContent=msg.msg;
+  document.getElementById('readyCount').textContent=total+' image'+(total>1?'s':'')+' à découvrir';
+
+  const rs=document.getElementById('readyScreen');
+  rs.style.display='flex';
+}
+
+function startGame(){
+  const rs=document.getElementById('readyScreen');
+  rs.classList.add('hiding');
+  setTimeout(()=>{rs.style.display='none';rs.classList.remove('hiding');},600);
+
+  buildStarCounter(Math.min(total,12));
+  document.getElementById('themeBadge').style.display='flex';
+  document.getElementById('themeLabel').textContent=themeLabels[themeName]||themeName;
+  document.getElementById('btnRevision').style.display='none';
+  update(); showNext();
+}
+
+function showNext(){
+  if(rem.length===0){showFinish();return}
+  const src=rem.pop();
+  const img=document.getElementById('mainImg');
+  const card=document.getElementById('imgCard');
+  img.src=src;
+  card.classList.remove('flip');
+  void card.offsetWidth;
+  card.classList.add('flip');
+  document.getElementById('btnOk').disabled=false;
+  document.getElementById('btnKo').disabled=false;
+  update();
+}
+
+function update(){
+  const done=total-rem.length;
+  document.getElementById('numOk').textContent=nOk;
+  document.getElementById('numKo').textContent=nKo;
+  document.getElementById('topCount').textContent=done+'/'+total;
+  document.getElementById('progLbl').textContent=done+' image'+(done>1?'s':'')+' sur '+total;
+  document.getElementById('progBar').style.width=(total>0?done/total*100:0)+'%';
+  litStars(nOk);
+}
+
+function handleClick(){if(!document.getElementById('btnKo').disabled) marquerKo();}
+
+// ── REACTION SYSTEM ──
+function showReaction(type){
+  // type: 'happy' or 'angry'
+  // randomly pick left or right
+  const side=Math.random()>0.5?'left':'right';
+  const idMap={happy:{left:'reactHappyLeft',right:'reactHappyRight'},angry:{left:'reactAngryLeft',right:'reactAngryRight'}};
+  const allIds=['reactHappyLeft','reactHappyRight','reactAngryLeft','reactAngryRight'];
+
+  // hide all first
+  allIds.forEach(id=>{
+    const el=document.getElementById(id);
+    el.style.display='none';
+    el.className=el.className.replace(/\s*(show-left|show-right|hide)\s*/g,' ').trim();
+  });
+
+  if(reactionTimer) clearTimeout(reactionTimer);
+
+  const targetId=idMap[type][side];
+  const el=document.getElementById(targetId);
+  el.style.display='flex';
+  // force reflow
+  void el.offsetWidth;
+  const aniClass=side==='left'?'show-left':'show-right';
+  el.classList.add(aniClass);
+
+  reactionTimer=setTimeout(()=>{
+    el.classList.remove(aniClass);
+    el.classList.add('hide');
+    setTimeout(()=>{el.style.display='none';el.classList.remove('hide');},450);
+  },1800);
+}
+
+function marquerOk(){
+  nOk++;
+  const numEl=document.getElementById('numOk');
+  numEl.classList.remove('bump');void numEl.offsetWidth;numEl.classList.add('bump');
+  showReaction('happy');
+  flash('fg'); showNext();
+}
+
+function marquerKo(){
+  const currentSrc=document.getElementById('mainImg').src;
+  wrongImgs.push(currentSrc);
+  nKo++;
+  const numEl=document.getElementById('numKo');
+  numEl.classList.remove('bump');void numEl.offsetWidth;numEl.classList.add('bump');
+  showReaction('angry');
+  flash('fr'); showNext();
+}
+
+function flash(cls){
+  const c=document.getElementById('imgCard');
+  c.classList.remove('fg','fr');void c.offsetWidth;c.classList.add(cls);
+}
+
+function showFinish(){
+  document.getElementById('imgCard').style.display='none';
+  document.getElementById('actionsEl').style.display='none';
+  document.getElementById('clickTip').style.display='none';
+  document.getElementById('themeBadge').style.display='none';
+  document.getElementById('starCounter').style.display='none';
+  const fs=document.getElementById('finishScreen');
+  fs.style.display='flex';
+  document.getElementById('restartEl').style.display='flex';
+  document.getElementById('fScore').textContent=nOk;
+  document.getElementById('fOk').textContent=nOk;
+  document.getElementById('fKo').textContent=nKo;
+  const pct=total>0?Math.round(nOk/total*100):0;
+  document.getElementById('fPct').textContent=pct+'%';
+  document.getElementById('fEmoji').textContent=pct===100?'🏆':pct>=80?'🎉':pct>=50?'👍':'📖';
+  const cat=pct===100?'perfect':pct>=80?'great':pct>=50?'ok':'low';
+  const arr=msgs[cat];
+  document.getElementById('fMsg').textContent=arr[Math.floor(Math.random()*arr.length)];
+
+  const cheers=['⭐','🌟','✨','📚','🎓','🏅'];
+  const cheerRow=document.getElementById('cheerRow');
+  cheerRow.innerHTML='';
+  (pct>=80?cheers:cheers.slice(0,3)).forEach((e,i)=>{
+    const sp=document.createElement('span');sp.className='cheer-item';sp.textContent=e;
+    sp.style.animationDelay=(i*0.1)+'s';cheerRow.appendChild(sp);
+  });
+
+  const revBtn=document.getElementById('btnRevision');
+  if(wrongImgs.length>0){revBtn.style.display='flex';document.getElementById('revisionCount').textContent=wrongImgs.length;}
+  else revBtn.style.display='none';
+  launchConfetti();
+}
+
+function launchConfetti(){
+  const colors=['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#f97316'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');p.className='confetti-piece';
+    p.style.cssText=`left:${Math.random()*100}vw;top:-20px;background:${colors[i%colors.length]};--cd:${1.5+Math.random()*2.5}s;--cdelay:${Math.random()*1.5}s;transform:rotate(${Math.random()*360}deg);border-radius:${Math.random()>0.5?'50%':'2px'};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px`;
+    document.body.appendChild(p);setTimeout(()=>p.remove(),5000);
+  }
+}
+
+function openRevision(){
+  const grid=document.getElementById('revisionGrid');
+  document.getElementById('revCountBadge').textContent=wrongImgs.length+' image'+(wrongImgs.length>1?'s':'');
+  grid.innerHTML='';
+  if(wrongImgs.length===0){
+    grid.innerHTML='<div class="rev-empty" style="grid-column:1/-1"><h3>Aucune erreur !</h3><p>Tu as tout réussi, bravo champion !</p></div>';
+  } else {
+    wrongImgs.forEach((src,i)=>{
+      const card=document.createElement('div');card.className='rev-card';card.style.setProperty('--ri',i);
+      card.innerHTML=`<div class="rev-card-img"><img src="${src}" alt="image" loading="lazy"></div><div class="rev-card-footer"><div class="rev-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fee2e2"/><path d="M8 8l8 8M16 8l-8 8" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/></svg>À revoir</div></div>`;
+      grid.appendChild(card);
+    });
+  }
+  document.getElementById('revisionOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeRevision(){document.getElementById('revisionOverlay').classList.remove('open');document.body.style.overflow='';}
+
+function relancerErreurs(){
+  closeRevision();
+  const errList=[...wrongImgs];
+  document.getElementById('imgCard').style.display='';
+  document.getElementById('actionsEl').style.display='';
+  document.getElementById('clickTip').style.display='';
+  document.getElementById('finishScreen').style.display='none';
+  document.getElementById('restartEl').style.display='none';
+  document.getElementById('starCounter').style.display='flex';
+  document.getElementById('themeBadge').style.display='flex';
+  document.getElementById('btnRevision').style.display='none';
+  imgs=[...errList];shuffle(imgs);rem=[...imgs];
+  total=imgs.length;nOk=0;nKo=0;wrongImgs=[];
+  buildStarCounter(Math.min(total,12));
+  update();showNext();
+}
+
+function relancer(){
+  document.getElementById('imgCard').style.display='';
+  document.getElementById('actionsEl').style.display='';
+  document.getElementById('clickTip').style.display='';
+  document.getElementById('finishScreen').style.display='none';
+  document.getElementById('restartEl').style.display='none';
+  document.getElementById('starCounter').style.display='flex';
+  showReadyScreen(themeName);
+}
+
+document.getElementById('revisionOverlay').addEventListener('click',function(e){if(e.target===this)closeRevision();});
+
+document.addEventListener('DOMContentLoaded',()=>{
+  buildTicker();
+  const p=new URLSearchParams(window.location.search);
+  const t=p.get('theme');
+  if(!t||!themes[t]){
+    document.getElementById('imgCard').style.display='none';
+    document.getElementById('actionsEl').style.display='none';
+    document.getElementById('emptyState').style.display='flex';
+    document.getElementById('themeBadge').style.display='none';
+    document.getElementById('starCounter').style.display='none';
+    document.getElementById('readyScreen').style.display='none';
+    return;
+  }
+  document.getElementById('topTheme').textContent=themeLabels[t]||t;
+  showReadyScreen(t);
+});
+
+// ══ MODE SCREEN LOGIC ══
+let gameMode = 'free'; // 'free' or 'timer'
+let timerDurationMs = 3000;
+let autoTimer = null;
+
+function showModeScreen(){
+  const rs = document.getElementById('readyScreen');
+  // Show mode screen first (it's behind ready screen due to z-index)
+  document.getElementById('modeScreen').classList.add('active');
+  // Then animate ready screen out on top
+  rs.classList.add('hiding');
+  setTimeout(()=>{
+    rs.style.display='none';
+    rs.classList.remove('hiding');
+  }, 650);
+}
+
+function selectMode(mode){
+  gameMode = mode;
+  document.getElementById('modeCardFree').classList.toggle('selected', mode==='free');
+  document.getElementById('modeCardTimer').classList.toggle('selected', mode==='timer');
+  const panel = document.getElementById('modeTimerPanel');
+  panel.classList.toggle('visible', mode==='timer');
+}
+
+function updateTimerLabel(){
+  const val = parseInt(document.getElementById('timerInput').value)||3000;
+  document.getElementById('timerDisplayLabel').textContent = val;
+  // update presets active state
+  document.querySelectorAll('.mode-preset').forEach(p=>{
+    p.classList.toggle('active', parseInt(p.textContent)*1000===val||p.textContent.includes('s')&&parseFloat(p.textContent)*1000===val);
+  });
+}
+
+function setPreset(ms){
+  document.getElementById('timerInput').value = ms;
+  document.getElementById('timerDisplayLabel').textContent = ms;
+  timerDurationMs = ms;
+  document.querySelectorAll('.mode-preset').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function confirmMode(){
+  if(gameMode==='timer'){
+    timerDurationMs = parseInt(document.getElementById('timerInput').value)||3000;
+    if(timerDurationMs<500) timerDurationMs=500;
+  }
+  const ms = document.getElementById('modeScreen');
+  ms.classList.add('hiding');
+  setTimeout(()=>{
+    ms.classList.remove('active','hiding');
+    // Now show game elements and start
+    document.getElementById('imgCard').style.display='';
+    document.getElementById('actionsEl').style.display='';
+    document.getElementById('clickTip').style.display='';
+    document.getElementById('starCounter').style.display='flex';
+    startGame();
+  }, 500);
+}
+
+// ── Override showNext to support timer mode ──
+const _origShowNext = showNext;
+window.showNext = function(){
+  // clear any existing auto-timer
+  if(autoTimer){ clearTimeout(autoTimer); autoTimer=null; }
+  stopTimerBar();
+
+  if(rem.length===0){showFinish();return;}
+  const src=rem.pop();
+  const img=document.getElementById('mainImg');
+  const card=document.getElementById('imgCard');
+  img.src=src;
+  card.classList.remove('flip');
+  void card.offsetWidth;
+  card.classList.add('flip');
+
+  if(gameMode==='timer'){
+    // disable manual buttons in timer mode? No — keep them so teacher can still click
+    document.getElementById('btnOk').disabled=false;
+    document.getElementById('btnKo').disabled=false;
+    startTimerBar(timerDurationMs);
+    autoTimer = setTimeout(()=>{
+      // auto advance = mark as "pas encore" (wrong) if no action taken
+      // Actually: just advance without marking (neutral skip)
+      autoAdvance();
+    }, timerDurationMs);
+  } else {
+    document.getElementById('btnOk').disabled=false;
+    document.getElementById('btnKo').disabled=false;
+  }
+  update();
+};
+
+function autoAdvance(){
+  // In timer mode: if time runs out, mark as Ko automatically
+  autoTimer=null;
+  stopTimerBar();
+  wrongImgs.push(document.getElementById('mainImg').src);
+  nKo++;
+  const numEl=document.getElementById('numKo');
+  numEl.classList.remove('bump');void numEl.offsetWidth;numEl.classList.add('bump');
+  showReaction('angry');
+  flash('fr');
+  if(rem.length===0){showFinish();}else{window.showNext();}
+}
+
+// Timer bar
+let timerBarInterval = null;
+function startTimerBar(ms){
+  const wrap = document.getElementById('timerBarWrap');
+  const fill = document.getElementById('timerBarFill');
+  const label = document.getElementById('timerSecsLabel');
+  wrap.classList.add('active');
+  fill.classList.remove('warning');
+  fill.style.width='100%';
+  const start=Date.now();
+  timerBarInterval=setInterval(()=>{
+    const elapsed=Date.now()-start;
+    const pct=Math.max(0,100-(elapsed/ms*100));
+    fill.style.width=pct+'%';
+    const secs=((ms-elapsed)/1000).toFixed(1);
+    label.textContent=secs+' s';
+    label.classList.toggle('warning', pct<25);
+    fill.classList.toggle('warning', pct<25);
+    if(pct<=0) stopTimerBar();
+  },80);
+}
+function stopTimerBar(){
+  if(timerBarInterval){clearInterval(timerBarInterval);timerBarInterval=null;}
+  document.getElementById('timerBarWrap').classList.remove('active');
+}
+
+// Intercept marquerOk / marquerKo to clear timer
+const _origOk = marquerOk;
+window.marquerOk = function(){
+  if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}
+  stopTimerBar();
+  nOk++;
+  const numEl=document.getElementById('numOk');
+  numEl.classList.remove('bump');void numEl.offsetWidth;numEl.classList.add('bump');
+  showReaction('happy');
+  flash('fg');
+  if(rem.length===0){showFinish();}else{window.showNext();}
+};
+const _origKo = marquerKo;
+window.marquerKo = function(){
+  if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}
+  stopTimerBar();
+  const currentSrc=document.getElementById('mainImg').src;
+  wrongImgs.push(currentSrc);
+  nKo++;
+  const numEl=document.getElementById('numKo');
+  numEl.classList.remove('bump');void numEl.offsetWidth;numEl.classList.add('bump');
+  showReaction('angry');
+  flash('fr');
+  if(rem.length===0){showFinish();}else{window.showNext();}
+};
+
+// In timer mode, clicking the card should NOT auto-advance (keep original handleClick only for free mode)
+window.handleClick = function(){
+  if(gameMode==='free' && !document.getElementById('btnKo').disabled) marquerKo();
+};
+
+</script>
+
+<!-- GSAP + Snap.svg for student animation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
+<script>
+(function initStudentAnim(){
+  // Wait for ready screen to be visible / DOM ready
+  function runAnim(){
+    if(typeof TimelineMax === 'undefined' || typeof Snap === 'undefined' || !document.getElementById('student')){
+      setTimeout(runAnim, 100); return;
+    }
+
+    var master = new TimelineMax({delay:0.4}),
+        studentWhole = document.getElementById('stud_whole'),
+        head = document.getElementById('stud_head'),
+        eyes = document.querySelectorAll('.eye'),
+        reflection = document.querySelectorAll('.reflection'),
+        hair = document.getElementById('hair'),
+        stars = document.querySelectorAll('.stars'),
+        circle = document.querySelectorAll('.circle'),
+        dashed = document.getElementById('dashed'),
+        pgFld = document.getElementById('pgFld');
+
+    // Snap.svg book variables
+    var s = Snap('#student');
+    var bottomPages = s.select('#btm_pgs'),
+        bottomEdge  = s.select('#bk_edg'),
+        bottomBody  = s.select('#bk_bdy'),
+        bottomRight = s.select('#btm_r'),
+        bottomLeft  = s.select('#btm_l'),
+        line        = s.select('#line');
+
+    bottomPages.attr({points:'199.827,333.441 200.188,334 198.801,334 198.14,333.344 190.077,333.696 190,333 209,333 208.487,333.463'});
+    bottomEdge.attr({d:'M184.5,332l0.5,9.5c0,0,5.635,7,14.661,7s14.839-7,14.839-7V332'});
+    bottomBody.attr({d:'M205.94,333H200h-7.524l-8.602,0.26l0.639,4.74c0,0,0.044,0.473,0.138,0.637c0.779,1.371,4.964,7.938,15.35,7.938c10.182,0,14.449-6.029,15.356-7.561c0.13-0.219,0.191-0.299,0.191-0.299l0.664-5.716H205.94z'});
+    bottomRight.attr({points:'199,326 199.016,326 199.7,326 199,326'});
+    bottomLeft.attr({points:'199,326 199.016,326 198.359,325.984 199,326'});
+
+    function bookIn(){
+      bottomPages.animate({points:'199,174 200,305 200,304 199,174 190,174 190,333 209,333 209,174'},200,mina.easeInOut,function(){
+        setTimeout(function(){
+          bottomPages.animate({points:'313.061,304.975 200.188,305 198.801,305 85.44,304.975 30.5,333 190,333 209,333 370,333'},400,mina.easeOut);
+        },100);
+      });
+      bottomEdge.animate({d:'M184.5,169l0.5,172.5c0,0,5.635,7,14.661,7s14.839-7,14.839-7V169'},200,mina.easeInOut,function(){
+        setTimeout(function(){
+          bottomEdge.animate({d:'M13,341.5h172.224c0,0,5.973,7,15,7s14.776-7,14.776-7h172'},400,mina.easeOut);
+        },100);
+      });
+      bottomBody.animate({d:'M205.94,174L200,307l-7.524-133l-8.602,0.26L184.512,338c0,0,0.044,0.473,0.138,0.637c0.779,1.371,4.964,7.938,15.35,7.938c10.182,0,14.449-6.029,15.356-7.561c0.13-0.219,0.191-0.299,0.191-0.299L216.212,174H205.94z'},200,mina.easeInOut,function(){
+        setTimeout(function(){
+          bottomBody.animate({d:'M328.178,308.28L200,307.238L72.591,308.28l-60.046,30.913l171.995-0.196c0,0,0.016,0.49,0.11,0.654c0.779,1.371,4.964,6.932,15.35,6.932c10.182,0,14.449-6.033,15.356-7.564c0.13-0.219,0.191-0.063,0.191-0.063L387.241,339L328.178,308.28z'},400,mina.easeOut);
+        },100);
+      });
+      bottomRight.animate({points:'199,299 199.016,174 199.7,174 199,326'},200,mina.easeInOut,function(){
+        setTimeout(function(){
+          bottomRight.animate({points:'199,299 300.647,299 355.376,326 199,326'},400,mina.easeOut);
+        },100);
+      });
+      bottomLeft.animate({points:'199,299 199.016,174 198.359,173.984 199,326'},200,mina.easeInOut,function(){
+        setTimeout(function(){
+          line.attr({opacity:1});
+          bottomLeft.animate({points:'199,299 96,299 44,326 199,326'},400,mina.easeOut);
+        },100);
+      });
+    }
+
+    TweenMax.set([studentWhole],{css:{display:'block'}});
+    TweenMax.set(stars,{css:{display:'block'}});
+    TweenMax.set(circle,{css:{display:'block'}});
+
+    // FIXED: book opens 1.8s after load — not waiting for infinite timeline
+    setTimeout(bookIn, 1800);
+
+    master
+      .add(circleScale())
+      .add('circleEnd')
+      .add(bodyRotateIn(),'circleEnd -= 1.25')
+      .add(repeatAnim(),'circleEnd -= 1');
+
+    function circleScale(){
+      var tl = new TimelineMax();
+      tl.staggerFrom(circle,.7,{transformOrigin:'50% 100%',scale:0,ease:Back.easeOut},0.2,'cirlceIn')
+        .staggerFrom(stars,1,{transformOrigin:'50% 50%',scale:0,opacity:0,ease:Elastic.easeOut},0.1,'cirlceIn+=.5');
+      return tl;
+    }
+
+    function bodyRotateIn(){
+      var tl = new TimelineMax();
+      tl.from(studentWhole,.5,{rotation:90,transformOrigin:'106 260',scale:0,fillOpacity:.5},'bodyRotation')
+        .from(head,.5,{rotation:45,transformOrigin:'85 180',ease:Back.easeOut},'bodyRotation+=.35')
+        .from(hair,2,{rotation:15,transformOrigin:'10 50%',ease:Elastic.easeOut},'bodyRotation+=.37');
+      tl.timeScale(1.5);
+      return tl;
+    }
+
+    function repeatAnim(){
+      // FIXED eyes: use scaleY instead of rotationX (rotationX on SVG causes vibration glitch)
+      function blinkEyes(){
+        TweenMax.to(eyes, 0.07, {scaleY:0.05, transformOrigin:'50% 50%', onComplete:function(){
+          TweenMax.to(eyes, 0.07, {scaleY:1, transformOrigin:'50% 50%'});
+        }});
+      }
+      // Natural blink pattern with setTimeout loop — no timeline conflict
+      (function blinkLoop(){
+        blinkEyes();
+        setTimeout(function(){
+          blinkEyes();
+          setTimeout(function(){
+            blinkEyes();
+            setTimeout(blinkLoop, 3000);
+          }, 4000);
+        }, 2500);
+      })();
+
+      var tl = new TimelineMax({repeat:-1});
+      tl.to(reflection,1.5,{x:12,opacity:.15},0)
+        .to(reflection,4,{x:12,opacity:.35},1.5)
+        .to(reflection,1,{x:0,opacity:.1},4)
+        .to(reflection,4,{x:0,opacity:.15},5)
+        .to(dashed,15,{rotation:180,transformOrigin:'50% 50%',ease:Linear.easeNone},0);
+      return tl;
+    }
+  }
+  runAnim();
+})();
+</script>
+</body>
+</html>

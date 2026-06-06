@@ -1,0 +1,82 @@
+<!-- page2.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Viewer</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #afficherImageBtn {
+            width: 400px; /* Ajustez cette valeur en fonction de vos besoins */
+            height: 400px; /* Ajustez cette valeur en fonction de vos besoins */
+            background-color: transparent;
+            border: none;
+            overflow: hidden;
+        }
+
+        #afficherImageBtn img {
+            width: 50%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        var themes = {les_phrases_utilisees_en_classe: ['les_phrases_utilisees_en_classe/1.png',"les_phrases_utilisees_en_classe/2.png", "les_phrases_utilisees_en_classe/3.png", "les_phrases_utilisees_en_classe/4.png", "les_phrases_utilisees_en_classe/5.png", "les_phrases_utilisees_en_classe/6.png", "les_phrases_utilisees_en_classe/7.png", "les_phrases_utilisees_en_classe/8.png" , "les_phrases_utilisees_en_classe/9.jpg", "les_phrases_utilisees_en_classe/10.png", "les_phrases_utilisees_en_classe/11.png", "les_phrases_utilisees_en_classe/12.png", "les_phrases_utilisees_en_classe/13.png", "les_phrases_utilisees_en_classe/14.png", "les_phrases_utilisees_en_classe/15.png", "les_phrases_utilisees_en_classe/16.png", "les_phrases_utilisees_en_classe/17.png", "les_phrases_utilisees_en_classe/19.png", "les_phrases_utilisees_en_classe/20.jpg", "les_phrases_utilisees_en_classe/21_22.png", "les_phrases_utilisees_en_classe/23.png", "les_phrases_utilisees_en_classe/24_25.png ", "les_phrases_utilisees_en_classe/26.png", "les_phrases_utilisees_en_classe/27_28.jpg", "les_phrases_utilisees_en_classe/29.png", "les_phrases_utilisees_en_classe/30.png"],
+        }
+
+        var toutesLesImages = [];
+        var imagesRestantes = [];
+
+        function initialiserImages(theme) {
+            toutesLesImages = themes[theme].slice();  // Copier le tableau du thème sélectionné
+            shuffleArray(toutesLesImages);
+            imagesRestantes = toutesLesImages.slice();  // Copier le tableau original
+        }
+
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+
+        function afficherImageSuivante() {
+            if (imagesRestantes.length === 0) {
+                // Si toutes les images ont été affichées, désactiver le bouton
+                document.getElementById('afficherImageBtn').disabled = true;
+                return;
+            }
+
+            var imageSelectionnee = imagesRestantes.pop();
+            document.getElementById('image').src = imageSelectionnee;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var themeSelectionne = urlParams.get('theme');
+
+            if (themeSelectionne) {
+                initialiserImages(themeSelectionne);
+                document.getElementById('afficherImageBtn').disabled = false;
+                afficherImageSuivante();
+            }
+        });
+    </script>
+ <button id="afficherImageBtn" onclick="afficherImageSuivante()" style="background-color: transparent; border: none; width: 100%;height: 100%;"><img id="image" src="" alt="Image" ></button>
+ <!--style="max-width: 90%;max-height: 80vh;margin-top: 20px;"-->
+  <!--<img id="image" src="" alt="Image" style="max-width: 90%;max-height: 80vh;margin-top: 20px;">
+  <button id="afficherImageBtn" onclick="afficherImageSuivante()" >Afficher Image Suivante</button>-->
+</body>
+</html>

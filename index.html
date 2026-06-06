@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jeux de Vocabulaire – Unité Bghadda</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800;900&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --sky:#fff9f0;
+  --white:#ffffff;
+  --ink:#2d2d2d;
+  --muted:#777;
+  --yellow:#FFD93D;
+  --orange:#FF6B35;
+  --pink:#FF6B9D;
+  --green:#06D6A0;
+  --blue:#4ECDC4;
+  --purple:#A855F7;
+  --red:#FF4757;
+  --lime:#AEFF6E;
+}
+
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--sky);
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ── MOVING CLOUDS BG ── */
+.clouds-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.cloud{
+  position:absolute;background:#fff;border-radius:50px;opacity:0.7;
+  animation:cloudDrift linear infinite;
+}
+.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:60%;height:150%;top:-70%;left:15%}
+.cloud::after{width:40%;height:120%;top:-55%;right:15%}
+.c1{width:160px;height:50px;bottom:15%;animation-duration:30s;animation-delay:-5s}
+.c2{width:120px;height:40px;bottom:30%;animation-duration:22s;animation-delay:-12s}
+.c3{width:200px;height:60px;bottom:60%;animation-duration:38s;animation-delay:-20s}
+.c4{width:100px;height:35px;bottom:75%;animation-duration:26s;animation-delay:-8s}
+@keyframes cloudDrift{from{left:-250px}to{left:110vw}}
+
+/* ── SCHOOL FLOATING DOODLES ── */
+.doodles{position:fixed;inset:0;pointer-events:none;z-index:1}
+.doodle{
+  position:absolute;
+  font-size:clamp(22px,4vw,36px);
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+  animation:doodleFloat var(--d,6s) ease-in-out infinite var(--del,0s);
+}
+@keyframes doodleFloat{
+  0%,100%{transform:translateY(0) rotate(var(--r0,0deg)) scale(1)}
+  50%{transform:translateY(-20px) rotate(var(--r1,10deg)) scale(1.08)}
+}
+
+/* ── RAINBOW TOP BAND ── */
+.rainbow-bar{
+  position:relative;z-index:10;height:10px;
+  background:linear-gradient(90deg,#FF6B35,#FFD93D,#06D6A0,#4ECDC4,#A855F7,#FF6B9D,#FF4757);
+  box-shadow:0 2px 12px rgba(255,107,53,0.4);
+}
+
+/* ── SCHOOL HEADER ── */
+.school-header{
+  position:relative;z-index:10;
+  background:linear-gradient(160deg,#FF6B35 0%,#FF8C42 40%,#FFD93D 100%);
+  padding:28px 20px 0;overflow:hidden;text-align:center;
+}
+.school-header::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='15' cy='15' r='3' fill='rgba(255,255,255,0.15)'/%3E%3Ccircle cx='50' cy='8' r='2' fill='rgba(255,255,255,0.12)'/%3E%3Ccircle cx='70' cy='40' r='4' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='8' cy='60' r='2.5' fill='rgba(255,255,255,0.13)'/%3E%3Ccircle cx='45' cy='65' r='3' fill='rgba(255,255,255,0.1)'/%3E%3Cstar cx='30' cy='40' r='3' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E");
+}
+.header-wave{display:block;width:100%;margin-bottom:-2px}
+
+/* Mascot */
+.mascot-wrap{position:relative;display:inline-block;margin-bottom:12px}
+.mascot{
+  width:110px;height:110px;background:var(--white);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:58px;
+  box-shadow:0 8px 0 rgba(0,0,0,0.15),0 12px 40px rgba(0,0,0,0.15),0 0 0 6px rgba(255,255,255,0.4);
+  animation:mascotWiggle 2.5s ease-in-out infinite;position:relative;z-index:2;
+}
+@keyframes mascotWiggle{
+  0%,100%{transform:rotate(-4deg) scale(1)}
+  50%{transform:rotate(4deg) scale(1.05)}
+}
+.mascot-ring{
+  position:absolute;inset:-16px;border-radius:50%;
+  border:4px dashed rgba(255,255,255,0.5);
+  animation:ringRotate 10s linear infinite;z-index:1;
+}
+@keyframes ringRotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+.mascot-stars{position:absolute;inset:-24px;pointer-events:none}
+.mstar{position:absolute;font-size:22px;animation:starSpin 3s linear infinite}
+.mstar:nth-child(1){top:0;left:28%;animation-delay:0s}
+.mstar:nth-child(2){top:28%;right:-2%;animation-delay:-1s}
+.mstar:nth-child(3){bottom:0;left:8%;animation-delay:-2s}
+.mstar:nth-child(4){top:28%;left:-4%;animation-delay:-1.5s;font-size:16px}
+@keyframes starSpin{
+  0%{transform:scale(0.8) rotate(0deg)}
+  50%{transform:scale(1.3) rotate(180deg)}
+  100%{transform:scale(0.8) rotate(360deg)}
+}
+
+.school-name{
+  font-family:'Baloo 2',cursive;font-size:clamp(1.6rem,5vw,2.4rem);font-weight:900;
+  color:#fff;text-shadow:0 4px 0 rgba(0,0,0,0.15),0 0 30px rgba(255,255,255,0.2);
+  line-height:1.1;letter-spacing:0.01em;
+}
+.school-arabic{font-size:1.1rem;color:rgba(255,255,255,0.88);font-weight:700;margin-top:4px}
+.school-tagline{
+  font-size:1rem;font-weight:800;color:rgba(255,255,255,0.95);margin-top:8px;
+  letter-spacing:0.04em;display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.18);border-radius:30px;padding:6px 20px;
+  border:2px solid rgba(255,255,255,0.35);backdrop-filter:blur(6px);
+}
+
+.badges-row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.hbadge{
+  background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.5);
+  border-radius:30px;padding:6px 18px;font-size:0.85rem;font-weight:800;
+  color:#fff;letter-spacing:0.03em;backdrop-filter:blur(6px);
+  box-shadow:0 3px 0 rgba(0,0,0,0.12);transition:transform 0.2s;
+}
+.hbadge:hover{transform:translateY(-3px)}
+
+/* welcome banner */
+.welcome-banner{
+  position:relative;z-index:6;
+  margin:22px auto 0;max-width:700px;
+  background:linear-gradient(135deg,#fff0e8,#fffbe8);
+  border:3px solid #FFD93D;border-radius:20px;
+  padding:14px 22px;text-align:center;
+  box-shadow:0 6px 0 #e0c000,0 10px 30px rgba(255,217,61,0.25);
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  flex-wrap:wrap;
+}
+.wb-text{font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;color:#c45a00;letter-spacing:0.02em}
+.wb-emoji{font-size:1.6rem;animation:wbBounce 1.8s ease-in-out infinite}
+@keyframes wbBounce{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-6px) rotate(5deg)}}
+
+/* ── SECTION TITLE ── */
+.section-title{
+  position:relative;z-index:5;text-align:center;
+  margin:26px 0 18px;font-family:'Baloo 2',cursive;
+  font-size:1.5rem;font-weight:900;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.section-title::before,.section-title::after{
+  content:'';flex:1;max-width:80px;height:3px;border-radius:3px;
+  background:linear-gradient(90deg,transparent,var(--orange));
+}
+.section-title::after{background:linear-gradient(90deg,var(--orange),transparent)}
+
+/* ── MAIN ── */
+.main{position:relative;z-index:5;max-width:960px;margin:0 auto;padding:0 16px 110px}
+
+/* ── THEME GRID ── */
+.themes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:14px}
+
+.tc{position:relative;cursor:pointer}
+.tc input[type=radio]{position:absolute;opacity:0;width:0;height:0}
+
+.tc-label{
+  display:flex;flex-direction:column;align-items:center;
+  background:var(--white);border:3px solid transparent;border-radius:24px;
+  padding:18px 10px 14px;cursor:pointer;
+  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:0 6px 0 var(--tc-shadow,#e0e0e0),0 8px 20px rgba(0,0,0,0.08);
+  gap:10px;position:relative;overflow:hidden;text-align:center;
+}
+.tc-label::before{
+  content:'';position:absolute;inset:0;background:var(--tc-bg,#fff5e0);opacity:0;
+  transition:opacity 0.2s;border-radius:20px;
+}
+
+/* school-themed corner stamp on each card */
+.tc-label::after{
+  content:var(--tc-stamp,'📚');
+  position:absolute;bottom:6px;right:8px;
+  font-size:14px;opacity:0.25;
+  transition:all 0.3s;
+}
+.tc-label:hover::after{opacity:0.6;transform:scale(1.2) rotate(-10deg)}
+
+.tc-label:hover{
+  border-color:var(--tc-color,#FFD93D);
+  transform:translateY(-8px) rotate(var(--tc-tilt,0deg));
+  box-shadow:0 14px 0 var(--tc-shadow,#e0c000),0 18px 34px rgba(0,0,0,0.14);
+}
+.tc-label:hover::before{opacity:1}
+
+.tc input:checked+.tc-label{
+  border-color:var(--tc-color,#FFD93D);transform:translateY(-8px);
+  box-shadow:0 10px 0 var(--tc-shadow,#e0c000),0 14px 30px rgba(0,0,0,0.15),0 0 0 5px rgba(255,217,61,0.25);
+}
+.tc input:checked+.tc-label::before{opacity:1}
+
+/* check badge */
+.tc-check{
+  position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;
+  background:var(--tc-color,#FFD93D);display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:15px;font-weight:900;text-shadow:0 1px 3px rgba(0,0,0,0.3);
+  opacity:0;transform:scale(0) rotate(-45deg);
+  transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);z-index:3;
+  box-shadow:0 3px 8px rgba(0,0,0,0.2);
+}
+.tc input:checked+.tc-label .tc-check{opacity:1;transform:scale(1) rotate(0deg)}
+
+.tc-img{
+  position:relative;z-index:1;width:82px;height:82px;border-radius:22px;overflow:hidden;
+  background:#f5f5f5;box-shadow:0 5px 14px rgba(0,0,0,0.12);flex-shrink:0;
+  border:3px solid rgba(255,255,255,0.85);transition:transform 0.3s;
+}
+.tc-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.35s}
+.tc-label:hover .tc-img img{transform:scale(1.14)}
+.tc-label:hover .tc-img{transform:translateY(-4px)}
+
+/* card count badge */
+.tc-count{
+  position:absolute;top:8px;left:8px;
+  background:var(--tc-color,#FFD93D);color:#fff;
+  font-size:10px;font-weight:900;border-radius:20px;padding:2px 8px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);z-index:3;
+  opacity:0;transform:scale(0) translateX(-4px);
+  transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1) 0.05s;
+}
+.tc input:checked+.tc-label .tc-count{opacity:1;transform:scale(1) translateX(0)}
+
+.tc-name{
+  position:relative;z-index:1;font-family:'Baloo 2',cursive;
+  font-size:0.85rem;font-weight:800;color:var(--ink);line-height:1.3;
+}
+
+/* theme color variants */
+.tc:nth-child(1)  .tc-label{--tc-color:#FF6B35;--tc-bg:#fff0e8;--tc-shadow:#cc4a1e;--tc-stamp:'🏠';--tc-tilt:-2deg}
+.tc:nth-child(2)  .tc-label{--tc-color:#06D6A0;--tc-bg:#e8fff8;--tc-shadow:#04a87d;--tc-stamp:'🍎';--tc-tilt:2deg}
+.tc:nth-child(3)  .tc-label{--tc-color:#FF6B9D;--tc-bg:#fff0f6;--tc-shadow:#cc4a7a;--tc-stamp:'🧍';--tc-tilt:-1deg}
+.tc:nth-child(4)  .tc-label{--tc-color:#4ECDC4;--tc-bg:#edfffe;--tc-shadow:#2ea89f;--tc-stamp:'✨';--tc-tilt:2deg}
+.tc:nth-child(5)  .tc-label{--tc-color:#A855F7;--tc-bg:#f6eeff;--tc-shadow:#7c3bc4;--tc-stamp:'👨‍👩‍👧';--tc-tilt:-2deg}
+.tc:nth-child(6)  .tc-label{--tc-color:#FF9F43;--tc-bg:#fff4e8;--tc-shadow:#cc7419;--tc-stamp:'🐾';--tc-tilt:1deg}
+.tc:nth-child(7)  .tc-label{--tc-color:#26de81;--tc-bg:#eafff3;--tc-shadow:#1db863;--tc-stamp:'🍳';--tc-tilt:-2deg}
+.tc:nth-child(8)  .tc-label{--tc-color:#4A90D9;--tc-bg:#eff6ff;--tc-shadow:#2c6ab0;--tc-stamp:'💼';--tc-tilt:2deg}
+.tc:nth-child(9)  .tc-label{--tc-color:#f368e0;--tc-bg:#fff0fe;--tc-shadow:#c243b3;--tc-stamp:'🚌';--tc-tilt:-1deg}
+.tc:nth-child(10) .tc-label{--tc-color:#00d2d3;--tc-bg:#eaffff;--tc-shadow:#00a7a8;--tc-stamp:'👗';--tc-tilt:2deg}
+.tc:nth-child(11) .tc-label{--tc-color:#FFD93D;--tc-bg:#fffbe8;--tc-shadow:#ccaa00;--tc-stamp:'🏙️';--tc-tilt:-1deg}
+.tc:nth-child(12) .tc-label{--tc-color:#7bed9f;--tc-bg:#f0fff5;--tc-shadow:#49c97c;--tc-stamp:'📍';--tc-tilt:1deg}
+.tc:nth-child(13) .tc-label{--tc-color:#ff4757;--tc-bg:#fff0f1;--tc-shadow:#cc1e2d;--tc-stamp:'🎨';--tc-tilt:-2deg}
+.tc:nth-child(14) .tc-label{--tc-color:#8B5CF6;--tc-bg:#f5f3ff;--tc-shadow:#6d28d9;--tc-stamp:'🏃';--tc-tilt:2deg}
+
+/* ── CTA AREA ── */
+.cta-area{display:flex;flex-direction:column;align-items:center;gap:14px;padding:36px 20px 0}
+
+.btn-start{
+  position:relative;font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:900;color:#fff;
+  background:linear-gradient(160deg,#FF6B35,#FF4757);border:none;border-radius:60px;
+  padding:18px 52px;cursor:pointer;transition:all 0.2s ease;letter-spacing:0.04em;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 8px 0 #cc2a3a,0 12px 30px rgba(255,71,87,0.35);
+  text-shadow:0 2px 4px rgba(0,0,0,0.2);overflow:hidden;
+}
+.btn-start::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.25),transparent 60%);
+  border-radius:inherit;pointer-events:none;
+}
+/* Ripple shimmer */
+.btn-start::after{
+  content:'';position:absolute;top:-50%;left:-60%;width:60%;height:200%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+  transform:skewX(-20deg);animation:shimmer 2.5s ease-in-out infinite;
+}
+@keyframes shimmer{0%,100%{left:-60%}50%{left:120%}}
+
+.btn-start:not(:disabled):hover{transform:translateY(-5px);box-shadow:0 13px 0 #cc2a3a,0 22px 42px rgba(255,71,87,0.45)}
+.btn-start:not(:disabled):active{transform:translateY(4px);box-shadow:0 4px 0 #cc2a3a,0 6px 15px rgba(255,71,87,0.3)}
+.btn-start:disabled{opacity:0.4;cursor:not-allowed;box-shadow:0 6px 0 #aaa,0 8px 16px rgba(0,0,0,0.1);background:linear-gradient(160deg,#aaa,#888)}
+.btn-start:disabled::after{display:none}
+
+.rocket-ico{font-size:1.5rem;display:inline-block;animation:rocketBob 1.5s ease-in-out infinite}
+@keyframes rocketBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+.hint-text{
+  font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;color:var(--muted);
+  min-height:28px;transition:all 0.3s;text-align:center;
+  background:rgba(255,255,255,0.8);border-radius:20px;padding:6px 20px;
+  border:2px dashed #e0e0e0;
+}
+.hint-text.selected{color:var(--orange);border-color:var(--orange);background:#fff4ee}
+
+/* ── SCORE ROW (gamification) ── */
+.score-row{
+  display:flex;gap:10px;justify-content:center;margin:20px auto 0;
+  max-width:700px;padding:0 16px;flex-wrap:wrap;
+}
+.score-pill{
+  background:#fff;border-radius:30px;padding:8px 18px;
+  box-shadow:0 4px 0 #e0e0e0,0 6px 16px rgba(0,0,0,0.07);
+  font-family:'Baloo 2',cursive;font-size:0.85rem;font-weight:800;
+  color:var(--ink);display:flex;align-items:center;gap:6px;
+  border:2px solid #f0f0f0;
+}
+
+/* ── FOOTER ── */
+.app-footer{
+  position:relative;z-index:5;
+  background:linear-gradient(135deg,#FF6B35,#FF4757);
+  padding:18px 24px;text-align:center;margin-top:32px;
+}
+.app-footer p{font-size:0.82rem;color:rgba(255,255,255,0.92);font-weight:800;letter-spacing:0.04em}
+
+/* ── ENTRY ANIMATIONS ── */
+@keyframes bounceIn{
+  0%{opacity:0;transform:scale(0.5) translateY(30px)}
+  60%{transform:scale(1.08) translateY(-8px)}
+  80%{transform:scale(0.96) translateY(4px)}
+  100%{opacity:1;transform:scale(1) translateY(0)}
+}
+.tc{animation:bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;animation-delay:calc(var(--i,0)*0.06s + 0.2s)}
+.header-inner-anim{animation:bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both}
+
+/* ── PENCIL DIVIDER ── */
+.pencil-divider{
+  display:flex;align-items:center;gap:8px;margin:14px auto 0;
+  justify-content:center;max-width:400px;padding:0 16px;
+  position:relative;z-index:6;
+}
+.pencil-line{flex:1;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,#FFD93D,transparent)}
+
+/* sparkle burst on card select */
+@keyframes sparkle{
+  0%{transform:scale(0) rotate(0);opacity:1}
+  80%{opacity:1}
+  100%{transform:scale(2.2) rotate(45deg);opacity:0}
+}
+.spark{
+  position:absolute;font-size:12px;pointer-events:none;
+  animation:sparkle 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+  z-index:10;
+}
+
+@media(max-width:480px){
+  .themes-grid{grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px}
+}
+</style>
+</head>
+<body>
+
+<!-- Moving clouds -->
+<div class="clouds-bg">
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+  <div class="cloud c4"></div>
+</div>
+
+<!-- School doodles floating -->
+<div class="doodles">
+  <span class="doodle" style="top:8%;left:2%;--d:5s;--r0:-5deg;--r1:8deg">📚</span>
+  <span class="doodle" style="top:18%;right:3%;--d:7s;--del:-2s;--r0:5deg;--r1:-8deg">✏️</span>
+  <span class="doodle" style="top:42%;left:1.5%;--d:6s;--del:-1s;--r0:0deg;--r1:12deg">📐</span>
+  <span class="doodle" style="top:60%;right:2.5%;--d:8s;--del:-3s;--r0:-8deg;--r1:5deg">🎒</span>
+  <span class="doodle" style="top:78%;left:4%;--d:5.5s;--del:-4s;--r0:3deg;--r1:-6deg">🖍️</span>
+  <span class="doodle" style="top:33%;right:1.5%;--d:6.5s;--del:-0.5s;--r0:-3deg;--r1:9deg">📏</span>
+  <span class="doodle" style="top:52%;left:0.8%;--d:7.5s;--del:-2.5s;--r0:6deg;--r1:-10deg">🔭</span>
+  <span class="doodle" style="top:88%;right:4%;--d:5s;--del:-1.5s;--r0:-4deg;--r1:7deg">🖊️</span>
+  <span class="doodle" style="top:72%;left:1%;--d:9s;--del:-3.5s;--r0:2deg;--r1:-8deg">🔬</span>
+  <span class="doodle" style="top:25%;left:92%;--d:6s;--del:-0.8s;--r0:-6deg;--r1:10deg">📌</span>
+</div>
+
+<!-- Rainbow bar -->
+<div class="rainbow-bar"></div>
+
+<!-- Header -->
+<header class="school-header">
+  <div class="header-inner-anim">
+    <div class="mascot-wrap">
+      <div class="mascot">🏫</div>
+      <div class="mascot-ring"></div>
+      <div class="mascot-stars">
+        <span class="mstar">⭐</span>
+        <span class="mstar">🌟</span>
+        <span class="mstar">✨</span>
+        <span class="mstar">💫</span>
+      </div>
+    </div>
+    <h1 class="school-name">Unité Bghadda<br>S.S.Mouaraa</h1>
+    <div class="school-arabic">وحدة بغداد · S.S.Mouaraa</div>
+    <p class="school-tagline">🎓 Jeux de Vocabulaire Français 🎓</p>
+    <div class="badges-row">
+      <span class="hbadge">📚 14 Thèmes</span>
+      <span class="hbadge">🖼️ 600+ Images</span>
+      <span class="hbadge">🏆 Score en direct</span>
+      <span class="hbadge">⭐ Pour les élèves</span>
+    </div>
+  </div>
+  <svg class="header-wave" viewBox="0 0 1440 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,28 C180,56 360,0 540,28 C720,56 900,0 1080,28 C1260,56 1380,14 1440,28 L1440,56 L0,56 Z" fill="#fff9f0"/>
+  </svg>
+</header>
+
+<!-- Welcome banner -->
+<div class="welcome-banner" style="max-width:800px; margin:0 auto;">
+  <span class="wb-emoji">👋</span>
+  <span class="wb-text">Bonjour les champions ! Choisis un thème et apprends du vocabulaire en t'amusant !</span>
+  <span class="wb-emoji">🌟</span>
+</div>
+
+<div class="pencil-divider">
+  <div class="pencil-line"></div>
+  <span style="font-size:22px">✏️</span>
+  <div class="pencil-line"></div>
+</div>
+
+<!-- Main content -->
+<main class="main">
+  <div class="section-title">
+    🎨 Choisis ton thème ! 🎨
+  </div>
+
+  <form id="themeForm" action="Application_Image_En_Click.html" method="get">
+  <div class="themes-grid" id="grid">
+
+    <div class="tc" style="--i:0">
+      <input type="radio" id="th_maison" name="theme" value="maison">
+      <label class="tc-label" for="th_maison">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="5-maison.png" alt="maison" loading="lazy"></div>
+        <span class="tc-name">🏠 La Maison</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:1">
+      <input type="radio" id="th_alim" name="theme" value="Alimentation">
+      <label class="tc-label" for="th_alim">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="8_alimentation.png" alt="alimentation" loading="lazy"></div>
+        <span class="tc-name">🍎 Alimentation</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:2">
+      <input type="radio" id="th_corps" name="theme" value="corps_hummain">
+      <label class="tc-label" for="th_corps">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="4_corps.jpg" alt="corps humain" loading="lazy"></div>
+        <span class="tc-name">🧍 Corps humain</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:3">
+      <input type="radio" id="th_adj" name="theme" value="adjectifs_qualificatifs">
+      <label class="tc-label" for="th_adj">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="1_ajectifs qualificatifs.png" alt="adjectifs" loading="lazy"></div>
+        <span class="tc-name">✨ Adjectifs</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:4">
+      <input type="radio" id="th_fam" name="theme" value="famille">
+      <label class="tc-label" for="th_fam">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="7_famille et gents.jpg" alt="famille" loading="lazy"></div>
+        <span class="tc-name">👨‍👩‍👧 Famille</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:5">
+      <input type="radio" id="th_anim" name="theme" value="animaux">
+      <label class="tc-label" for="th_anim">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="2_animaux.png" alt="animaux" loading="lazy"></div>
+        <span class="tc-name">🐾 Animaux</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:6">
+      <input type="radio" id="th_cuis" name="theme" value="cuisine">
+      <label class="tc-label" for="th_cuis">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="6_cuisine.png" alt="cuisine" loading="lazy"></div>
+        <span class="tc-name">🍳 Cuisine</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:7">
+      <input type="radio" id="th_met" name="theme" value="metiers_et_professions">
+      <label class="tc-label" for="th_met">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="9_métiers et professions.png" alt="métiers" loading="lazy"></div>
+        <span class="tc-name">💼 Métiers</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:8">
+      <input type="radio" id="th_trans" name="theme" value="transport">
+      <label class="tc-label" for="th_trans">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="10_transport.png" alt="transport" loading="lazy"></div>
+        <span class="tc-name">🚌 Transport</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:9">
+      <input type="radio" id="th_vet" name="theme" value="vetement">
+      <label class="tc-label" for="th_vet">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="10_vetements.png" alt="vêtements" loading="lazy"></div>
+        <span class="tc-name">👗 Vêtements</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:10">
+      <input type="radio" id="th_lieu" name="theme" value="lieu">
+      <label class="tc-label" for="th_lieu">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="13_prépositions de lieu.jpg" alt="lieux" loading="lazy"></div>
+        <span class="tc-name">🏙️ Les Lieux</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:11">
+      <input type="radio" id="th_prep" name="theme" value="préposition_de_lieu">
+      <label class="tc-label" for="th_prep">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="13_prépositions de lieu.jpg" alt="prépositions" loading="lazy"></div>
+        <span class="tc-name">📍 Prépositions</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:12">
+      <input type="radio" id="th_ecole" name="theme" value="ecole_et_coleur">
+      <label class="tc-label" for="th_ecole">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="3_ecole_couleur.jpg" alt="école" loading="lazy"></div>
+        <span class="tc-name">🎨 École & Couleurs</span>
+      </label>
+    </div>
+
+    <div class="tc" style="--i:13">
+      <input type="radio" id="th_verbes" name="theme" value="verbes">
+      <label class="tc-label" for="th_verbes">
+        <span class="tc-check">✓</span>
+        <div class="tc-img"><img src="11_verbes.png" alt="verbes" loading="lazy"></div>
+        <span class="tc-name">🏃 Les Verbes</span>
+      </label>
+    </div>
+
+  </div>
+
+  <div class="cta-area">
+    <button type="submit" class="btn-start" id="btnStart" disabled>
+      <span class="rocket-ico">🚀</span>
+      On commence !
+    </button>
+    <p class="hint-text" id="hintText">👆 Clique sur un thème pour jouer !</p>
+  </div>
+  </form>
+
+</main>
+
+<footer class="app-footer">
+  <p>🏫 Unité Bghadda · S.S.Mouaraa &nbsp;|&nbsp; 📚 Application pédagogique de vocabulaire français 🎓 &nbsp;|&nbsp; ✏️ Apprends en jouant !</p>
+</footer>
+
+<script>
+const radios = document.querySelectorAll('input[type=radio]');
+const btn = document.getElementById('btnStart');
+const hint = document.getElementById('hintText');
+const labels = {
+  maison:'La Maison 🏠', Alimentation:'Alimentation 🍎', corps_hummain:'Corps humain 🧍',
+  adjectifs_qualificatifs:'Adjectifs ✨', famille:'Famille 👨‍👩‍👧', animaux:'Animaux 🐾',
+  cuisine:'Cuisine 🍳', metiers_et_professions:'Métiers 💼', transport:'Transport 🚌',
+  vetement:'Vêtements 👗', lieu:'Les Lieux 🏙️', 'préposition_de_lieu':'Prépositions 📍',
+  ecole_et_coleur:'École & Couleurs 🎨',
+  verbes:'Les Verbes 🏃'
+};
+
+// Sparkle on card select
+function spawnSparks(el){
+  const rect = el.getBoundingClientRect();
+  const sparks = ['⭐','✨','🌟','💫','🎉'];
+  sparks.forEach((s,i)=>{
+    const sp = document.createElement('span');
+    sp.className='spark';
+    sp.textContent = s;
+    const angle = (i/sparks.length)*360;
+    const rad = angle*Math.PI/180;
+    sp.style.cssText = `
+      position:fixed;
+      left:${rect.left+rect.width/2}px;
+      top:${rect.top+rect.height/2}px;
+      pointer-events:none;
+      font-size:16px;
+      z-index:9999;
+      animation: sparkMove 0.7s ease-out both;
+      --tx:${Math.cos(rad)*55}px;
+      --ty:${Math.sin(rad)*55}px;
+    `;
+    document.body.appendChild(sp);
+    setTimeout(()=>sp.remove(),800);
+  });
+}
+
+// Add keyframe for spark movement
+if(!document.querySelector('#sparkStyles')){
+  const st = document.createElement('style');
+  st.id='sparkStyles';
+  st.textContent=`@keyframes sparkMove{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0.2);opacity:0}}`;
+  document.head.appendChild(st);
+}
+
+radios.forEach(r => r.addEventListener('change', () => {
+  btn.disabled = false;
+  hint.textContent = '🎯 Thème choisi : ' + (labels[r.value] || r.value) + ' — Prêt(e) ! 🌟';
+  hint.className = 'hint-text selected';
+  const lbl = r.closest('.tc').querySelector('.tc-label');
+  spawnSparks(lbl);
+}));
+</script>
+</body>
+</html>
