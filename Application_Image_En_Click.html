@@ -767,6 +767,38 @@ a.btn-restart{text-decoration:none}
   .ready-count{font-size:0.78rem}
 }
 
+
+/* ══ VOICE MODE ══ */
+@keyframes micPulse{
+  0%{transform:scale(1);opacity:0.7}
+  100%{transform:scale(1.6);opacity:0}
+}
+#micBtn.listening{
+  background:linear-gradient(145deg,#ef4444,#dc2626) !important;
+  box-shadow:0 8px 0 #991b1b,0 16px 40px rgba(239,68,68,0.6) !important;
+  animation:micBounce 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes micBounce{
+  0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}
+}
+#micBtn.correct-flash{background:linear-gradient(145deg,#10b981,#059669) !important;box-shadow:0 8px 0 #065f46,0 16px 40px rgba(16,185,129,0.6) !important}
+#micBtn.wrong-flash{background:linear-gradient(145deg,#ef4444,#dc2626) !important;box-shadow:0 8px 0 #991b1b,0 16px 40px rgba(239,68,68,0.6) !important}
+
+.voice-transcript-bubble{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(0,0,0,0.82);backdrop-filter:blur(16px);
+  border-radius:24px;padding:18px 28px;
+  font-family:'Fredoka One',cursive;font-size:1.4rem;color:#fff;
+  text-align:center;z-index:85;min-width:180px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  animation:bubblePop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events:none;
+}
+@keyframes bubblePop{
+  0%{transform:translate(-50%,-50%) scale(0.5);opacity:0}
+  100%{transform:translate(-50%,-50%) scale(1);opacity:1}
+}
+
 </style>
 </head>
 <body>
@@ -951,6 +983,12 @@ a.btn-restart{text-decoration:none}
       <div class="mode-card-title">Avec chrono</div>
       <div class="mode-card-desc">Chaque image passe automatiquement après le temps choisi.</div>
     </div>
+    <!-- Card 3: vocal -->
+    <div class="mode-card" id="modeCardVoice" onclick="selectMode('voice')">
+      <div class="mode-card-icon">🎤</div>
+      <div class="mode-card-title">Mode vocal</div>
+      <div class="mode-card-desc">Dis le mot à voix haute ! L'app écoute et vérifie ta réponse.</div>
+    </div>
   </div>
 
   <!-- Timer config panel (hidden until timer mode selected) -->
@@ -966,6 +1004,15 @@ a.btn-restart{text-decoration:none}
       <div class="mode-preset" onclick="setPreset(5000)">5 s</div>
       <div class="mode-preset" onclick="setPreset(8000)">8 s</div>
       <div class="mode-preset" onclick="setPreset(10000)">10 s</div>
+    </div>
+  </div>
+
+  <!-- Voice info panel -->
+  <div class="mode-timer-panel" id="modeVoicePanel" style="display:none">
+    <div style="font-size:2rem">🎤</div>
+    <div class="mode-timer-label" style="text-align:center;line-height:1.6">
+      L'app va <span>écouter ta voix</span> et comparer<br>avec le nom de l'image.<br>
+      <small style="color:rgba(255,255,255,0.5);font-size:0.75rem;font-weight:600">Assure-toi que le micro est autorisé dans ton navigateur.</small>
     </div>
   </div>
 
@@ -1645,6 +1692,280 @@ window.marquerKo = function(){
 // In timer mode, clicking the card should NOT auto-advance (keep original handleClick only for free mode)
 window.handleClick = function(){
   if(gameMode==='free' && !document.getElementById('btnKo').disabled) marquerKo();
+};
+
+// ══════════════════════════════════════
+// VOICE MODE
+// ══════════════════════════════════════
+let recognition = null;
+let isListening = false;
+let voiceAutoStart = false;
+let currentExpectedWord = '';
+
+
+function showVoiceBlockedMsg(html){
+  const d = document.createElement('div');
+  d.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;';
+  d.innerHTML = `<div style="background:#1e293b;border:2px solid #ef4444;border-radius:24px;padding:32px 36px;max-width:380px;text-align:center;font-family:'Fredoka One',cursive;color:#fff;line-height:1.6">
+    <div style="font-size:3rem;margin-bottom:12px">🔒</div>
+    <div style="font-size:1.1rem;margin-bottom:8px">${html}</div>
+    <button onclick="this.closest('div[style]').remove();selectMode('free')" style="margin-top:18px;background:#3b82f6;border:none;border-radius:40px;padding:10px 28px;font-family:'Fredoka One',cursive;font-size:1rem;color:#fff;cursor:pointer">Utiliser le mode sans chrono</button>
+  </div>`;
+  document.body.appendChild(d);
+}
+
+function initSpeechRecognition(){
+  // Bloc file:// — micro impossible sans HTTPS
+  if(location.protocol === 'file:'){
+    showVoiceBlockedMsg('🔒 Le mode vocal nécessite HTTPS.<br><small>Déploie lapp sur GitHub Pages ou un serveur web.<br>En local (file://), le micro est bloqué par le navigateur.</small>');
+    return false;
+  }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition){
+    showVoiceBlockedMsg('❌ Ton navigateur ne supporte pas le micro.<br><small>Utilise Chrome ou Edge.</small>');
+    return false;
+  }
+  recognition = new SpeechRecognition();
+  recognition.lang = 'fr-FR';
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 5;
+
+  recognition.onstart = function(){
+    isListening = true;
+    document.getElementById('micBtn').classList.add('listening');
+    document.getElementById('micRipple').style.display = 'block';
+    document.getElementById('voiceFeedback').textContent = "Je t'écoute... 👂";
+    document.getElementById('micIcon').textContent = '⏹';
+  };
+
+  recognition.onend = function(){
+    isListening = false;
+    document.getElementById('micBtn').classList.remove('listening');
+    document.getElementById('micRipple').style.display = 'none';
+    document.getElementById('micIcon').textContent = '🎤';
+    document.getElementById('voiceFeedback').textContent = '';
+  };
+
+  recognition.onresult = function(e){
+    // Collect all alternatives from all results
+    let allTranscripts = [];
+    for(let i=0; i<e.results.length; i++){
+      for(let j=0; j<e.results[i].length; j++){
+        allTranscripts.push(e.results[i][j].transcript.trim().toLowerCase());
+      }
+    }
+    // Show interim result
+    if(e.results[0] && !e.results[0].isFinal){
+      document.getElementById('voiceFeedback').textContent = '🔊 "' + e.results[0][0].transcript + '"';
+      return;
+    }
+    // Final result
+    if(e.results[e.results.length-1].isFinal){
+      const heard = allTranscripts;
+      checkVoiceAnswer(heard);
+    }
+  };
+
+  recognition.onerror = function(e){
+    isListening = false;
+    document.getElementById('micBtn').classList.remove('listening');
+    document.getElementById('micRipple').style.display = 'none';
+    document.getElementById('micIcon').textContent = '🎤';
+    if(e.error === 'no-speech'){
+      document.getElementById('voiceFeedback').textContent = 'Rien entendu 🔇 — réessaie !';
+    } else if(e.error === 'not-allowed'){
+      document.getElementById('voiceFeedback').textContent = '❌ Micro non autorisé';
+    } else {
+      document.getElementById('voiceFeedback').textContent = 'Erreur : ' + e.error;
+    }
+    // Auto-restart after error if in voice mode
+    if(gameMode==='voice' && e.error !== 'not-allowed'){
+      setTimeout(startListening, 1200);
+    }
+  };
+  return true;
+}
+
+function normalizeWord(w){
+  // Lowercase, remove accents, trim, remove hyphens/apostrophes
+  return w.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[-''\s]/g,' ')
+    .trim();
+}
+
+function checkVoiceAnswer(heardList){
+  const expected = normalizeWord(currentExpectedWord);
+  let correct = false;
+
+  for(let heard of heardList){
+    const h = normalizeWord(heard);
+    // Exact match or contains the word
+    if(h === expected || h.includes(expected) || expected.includes(h)){
+      correct = true; break;
+    }
+    // Split heard into words and check each
+    const words = h.split(/\s+/);
+    for(let w of words){
+      if(w === expected || levenshtein(w, expected) <= 1){
+        correct = true; break;
+      }
+    }
+    if(correct) break;
+  }
+
+  // Show transcript bubble
+  const bubble = document.createElement('div');
+  bubble.className = 'voice-transcript-bubble';
+  const bestHeard = heardList[0] || '?';
+  bubble.innerHTML = (correct ? '✅ ' : '❌ ') + '"' + bestHeard + '"';
+  document.body.appendChild(bubble);
+  setTimeout(()=>bubble.remove(), 1800);
+
+  const micBtn = document.getElementById('micBtn');
+  if(correct){
+    micBtn.classList.add('correct-flash');
+    setTimeout(()=>micBtn.classList.remove('correct-flash'), 700);
+    window.marquerOk();
+  } else {
+    micBtn.classList.add('wrong-flash');
+    setTimeout(()=>micBtn.classList.remove('wrong-flash'), 700);
+    window.marquerKo();
+  }
+}
+
+// Simple Levenshtein for fuzzy match (1 typo tolerance)
+function levenshtein(a, b){
+  const m=a.length, n=b.length;
+  const dp=Array.from({length:m+1},(_,i)=>Array.from({length:n+1},(_,j)=>i?j?0:i:j));
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function toggleMic(){
+  if(isListening){ recognition.stop(); }
+  else { startListening(); }
+}
+
+function startListening(){
+  if(!recognition) return;
+  try{ recognition.start(); }catch(e){}
+}
+
+function stopListening(){
+  if(recognition && isListening){ try{ recognition.stop(); }catch(e){} }
+}
+
+// Extract expected word from image src
+function getWordFromSrc(src){
+  const parts = src.split('/');
+  const filename = parts[parts.length-1];
+  return filename.replace(/\.[^.]+$/,'').replace(/[-_]/g,' ');
+}
+
+// ── Extend selectMode for voice ──
+const _origSelectMode = selectMode;
+window.selectMode = function(mode){
+  gameMode = mode;
+  document.getElementById('modeCardFree').classList.toggle('selected', mode==='free');
+  document.getElementById('modeCardTimer').classList.toggle('selected', mode==='timer');
+  document.getElementById('modeCardVoice').classList.toggle('selected', mode==='voice');
+  const timerPanel = document.getElementById('modeTimerPanel');
+  const voicePanel = document.getElementById('modeVoicePanel');
+  timerPanel.classList.toggle('visible', mode==='timer');
+  voicePanel.style.display = mode==='voice' ? 'flex' : 'none';
+};
+
+// ── Extend showNext to handle voice mode ──
+const _origShowNextV2 = window.showNext;
+window.showNext = function(){
+  stopListening();
+  if(autoTimer){ clearTimeout(autoTimer); autoTimer=null; }
+  stopTimerBar();
+
+  if(rem.length===0){ showFinish(); return; }
+  const src = rem.pop();
+  const img = document.getElementById('mainImg');
+  const card = document.getElementById('imgCard');
+  img.src = src;
+  card.classList.remove('flip');
+  void card.offsetWidth;
+  card.classList.add('flip');
+
+  if(gameMode==='voice'){
+    currentExpectedWord = getWordFromSrc(src);
+    // Show expected word hint (blurred initially)
+    const wd = document.getElementById('voiceWordDisplay');
+    wd.textContent = '🔤 ' + currentExpectedWord;
+    wd.style.opacity = '0.15';
+    wd.style.filter = 'blur(6px)';
+    document.getElementById('voiceFeedback').textContent = 'Appuie sur 🎤 et dis le mot !';
+    document.getElementById('btnOk').disabled = true;
+    document.getElementById('btnKo').disabled = true;
+    // Auto-start mic after card flip
+    setTimeout(startListening, 700);
+  } else if(gameMode==='timer'){
+    document.getElementById('btnOk').disabled = false;
+    document.getElementById('btnKo').disabled = false;
+    startTimerBar(timerDurationMs);
+    autoTimer = setTimeout(autoAdvance, timerDurationMs);
+  } else {
+    document.getElementById('btnOk').disabled = false;
+    document.getElementById('btnKo').disabled = false;
+  }
+  update();
+};
+
+// ── Extend confirmMode to init voice ──
+const _origConfirmMode = confirmMode;
+window.confirmMode = function(){
+  if(gameMode==='timer'){
+    timerDurationMs = parseInt(document.getElementById('timerInput').value)||3000;
+    if(timerDurationMs<500) timerDurationMs=500;
+  }
+  if(gameMode==='voice'){
+    if(!initSpeechRecognition()) return;
+  }
+  const ms = document.getElementById('modeScreen');
+  ms.classList.add('hiding');
+  setTimeout(()=>{
+    ms.classList.remove('active','hiding');
+    document.getElementById('imgCard').style.display='';
+    document.getElementById('actionsEl').style.display='';
+    document.getElementById('clickTip').style.display='';
+    document.getElementById('starCounter').style.display='flex';
+    // Show voice overlay if voice mode
+    if(gameMode==='voice'){
+      document.getElementById('voiceOverlay').style.display='flex';
+      document.getElementById('actionsEl').style.display='none'; // hide ok/ko buttons
+    }
+    startGame();
+  }, 500);
+};
+
+// ── Show word hint when user taps the image in voice mode ──
+document.addEventListener('DOMContentLoaded', function(){
+  const imgCard = document.getElementById('imgCard');
+  if(imgCard){
+    imgCard.addEventListener('dblclick', function(){
+      if(gameMode==='voice'){
+        const wd = document.getElementById('voiceWordDisplay');
+        wd.style.opacity='1';
+        wd.style.filter='none';
+        setTimeout(()=>{ wd.style.opacity='0.15'; wd.style.filter='blur(6px)'; }, 2000);
+      }
+    });
+  }
+});
+
+// ── Reset voice overlay when game resets ──
+const _origShowFinish = window.showFinish;
+window.showFinish = function(){
+  stopListening();
+  document.getElementById('voiceOverlay').style.display='none';
+  if(_origShowFinish) _origShowFinish();
 };
 
 </script>
