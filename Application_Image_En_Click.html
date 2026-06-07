@@ -846,6 +846,94 @@ a.btn-restart{text-decoration:none}
   color:#fff;transform:scale(1.04);
 }
 
+
+/* ══════════════════════════════════════
+   MODE SCREEN — MOBILE RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:600px){
+
+  .mode-screen{
+    justify-content:flex-start;
+    padding:16px 12px 24px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    gap:14px;
+  }
+
+  .mode-title{
+    font-size:1.2rem;
+    margin-top:4px;
+    flex-shrink:0;
+  }
+
+  /* Cards: vertical stack on mobile */
+  .mode-cards{
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    width:100%;
+    flex-shrink:0;
+  }
+
+  .mode-card{
+    width:100%;
+    max-width:340px;
+    flex-direction:row;
+    padding:14px 18px;
+    gap:14px;
+    border-radius:20px;
+    text-align:left;
+  }
+
+  .mode-card-icon{
+    font-size:32px;
+    flex-shrink:0;
+  }
+
+  .mode-card-title{
+    font-size:1rem;
+    margin-bottom:2px;
+  }
+
+  .mode-card-desc{
+    font-size:0.72rem;
+    line-height:1.4;
+  }
+
+  /* Timer panel compact */
+  .mode-timer-panel{
+    padding:14px 16px;
+    gap:10px;
+    max-width:100%;
+    flex-shrink:0;
+  }
+
+  .mode-timer-label{font-size:0.9rem}
+
+  .mode-timer-input{
+    padding:10px 12px;
+    font-size:1rem;
+  }
+
+  .mode-preset{
+    padding:5px 10px;
+    font-size:0.75rem;
+  }
+
+  /* Confirm button: full width */
+  .mode-confirm-btn{
+    width:100%;
+    max-width:340px;
+    justify-content:center;
+    font-size:1.05rem;
+    padding:14px 20px;
+    flex-shrink:0;
+    /* Remove animation delay so it's always visible */
+    animation:none;
+    opacity:1;
+  }
+}
+
 </style>
 </head>
 <body>
