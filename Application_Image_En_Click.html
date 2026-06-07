@@ -1678,17 +1678,27 @@ function relancerErreurs(){
   closeRevision();
   const errList=[...wrongImgs];
   document.getElementById('imgCard').style.display='';
-  document.getElementById('actionsEl').style.display='';
   document.getElementById('clickTip').style.display='';
   document.getElementById('finishScreen').style.display='none';
   document.getElementById('restartEl').style.display='none';
   document.getElementById('starCounter').style.display='flex';
   document.getElementById('themeBadge').style.display='flex';
   document.getElementById('btnRevision').style.display='none';
-  imgs=[...errList];shuffle(imgs);rem=[...imgs];
-  total=imgs.length;nOk=0;nKo=0;wrongImgs=[];
+
+  // Restore correct UI for current mode
+  if(gameMode === 'voice'){
+    document.getElementById('actionsEl').style.display='none';
+    document.getElementById('voiceOverlay').style.display='flex';
+  } else {
+    document.getElementById('actionsEl').style.display='';
+    document.getElementById('voiceOverlay').style.display='none';
+  }
+
+  imgs=[...errList]; shuffle(imgs); rem=[...imgs];
+  total=imgs.length; nOk=0; nKo=0; wrongImgs=[];
   buildStarCounter(Math.min(total,12));
-  update();showNext();
+  update();
+  window.showNext(); // uses voice/timer/free override
 }
 
 function relancer(){
@@ -2134,7 +2144,14 @@ document.addEventListener('DOMContentLoaded', function(){
 function voicePasser(){
   stopListening();
   voiceGameActive = false;
-  // Show correct word, then skip (neutral — not counted as wrong)
+  // Count as KO + show correct word
+  const currentSrc = document.getElementById('mainImg').src;
+  wrongImgs.push(currentSrc);
+  nKo++;
+  const numEl = document.getElementById('numKo');
+  numEl.classList.remove('bump'); void numEl.offsetWidth; numEl.classList.add('bump');
+  showReaction('angry');
+  flash('fr');
   showCorrectWordBubble(currentExpectedWord, function(){
     if(rem.length===0){ showFinish(); return; }
     voiceGameActive = true;
