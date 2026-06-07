@@ -803,13 +803,24 @@ a.btn-restart{text-decoration:none}
 /* Correct word bubble */
 .voice-correct-bubble{
   position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-  background:rgba(15,23,42,0.92);backdrop-filter:blur(20px);
-  border:2px solid #fbbf24;border-radius:24px;
-  padding:22px 36px;text-align:center;z-index:200;
+  background:rgba(15,23,42,0.95);backdrop-filter:blur(20px);
+  border:2.5px solid #fbbf24;border-radius:28px;
+  padding:28px 40px;text-align:center;z-index:200;
   font-family:'Fredoka One',cursive;color:#fff;
-  box-shadow:0 0 0 6px rgba(251,191,36,0.15),0 24px 60px rgba(0,0,0,0.5);
+  box-shadow:0 0 0 8px rgba(251,191,36,0.15),0 24px 60px rgba(0,0,0,0.6);
   animation:bubblePop 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  pointer-events:none;min-width:200px;
+  pointer-events:none;min-width:220px;
+}
+/* transcript bubble used for correct answer */
+.voice-transcript-bubble{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(15,23,42,0.95);backdrop-filter:blur(20px);
+  border:2.5px solid rgba(255,255,255,0.2);border-radius:28px;
+  padding:24px 36px;text-align:center;z-index:200;
+  font-family:'Fredoka One',cursive;color:#fff;
+  box-shadow:0 24px 60px rgba(0,0,0,0.6);
+  animation:bubblePop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events:none;min-width:220px;
 }
 /* Passer button */
 #voicePasserBtn{
@@ -1821,28 +1832,40 @@ function checkVoiceAnswer(heardList){
     if(correct) break;
   }
 
-  // Show transcript bubble
-  const bubble = document.createElement('div');
-  bubble.className = 'voice-transcript-bubble';
   const bestHeard = heardList[0] || '?';
-  bubble.innerHTML = (correct ? '✅ ' : '❌ ') + '"' + bestHeard + '"';
-  document.body.appendChild(bubble);
-  setTimeout(()=>bubble.remove(), 1800);
-
   const micBtn = document.getElementById('micBtn');
+
   if(correct){
+    // Show green success bubble
+    const bubble = document.createElement('div');
+    bubble.className = 'voice-transcript-bubble';
+    bubble.innerHTML = '✅ ' + '"' + bestHeard + '"';
+    document.body.appendChild(bubble);
+    setTimeout(()=>bubble.remove(), 1500);
+
     micBtn.classList.add('correct-flash');
     setTimeout(()=>micBtn.classList.remove('correct-flash'), 700);
-    voiceGameActive = false; // pause auto-restart during transition
-    window.marquerOk();
+    voiceGameActive = false;
+    setTimeout(function(){ window.marquerOk(); }, 600);
+
   } else {
     micBtn.classList.add('wrong-flash');
     setTimeout(()=>micBtn.classList.remove('wrong-flash'), 700);
-    // Show correct word bubble before moving on
-    showCorrectWordBubble(currentExpectedWord, function(){
-      voiceGameActive = false;
+
+    // Single bubble: what was heard + correct word
+    const bubble = document.createElement('div');
+    bubble.className = 'voice-transcript-bubble';
+    bubble.innerHTML =
+      '<div style="font-size:0.9rem;color:rgba(255,255,255,0.6);margin-bottom:6px">Tu as dit : <span style="color:#f87171">"' + bestHeard + '"</span></div>' +
+      '<div style="font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:8px">Le mot correct est :</div>' +
+      '<div style="font-size:2rem;font-weight:900;color:#fbbf24;letter-spacing:0.06em;text-transform:uppercase">' + currentExpectedWord + '</div>';
+    document.body.appendChild(bubble);
+
+    voiceGameActive = false;
+    setTimeout(function(){
+      bubble.remove();
       window.marquerKo();
-    });
+    }, 2500);
   }
 }
 
