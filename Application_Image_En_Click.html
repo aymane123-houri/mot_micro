@@ -1332,15 +1332,12 @@ function showReadyScreen(t){
 }
 
 function startGame(){
-  const rs=document.getElementById('readyScreen');
-  rs.classList.add('hiding');
-  setTimeout(()=>{rs.style.display='none';rs.classList.remove('hiding');},600);
-
   buildStarCounter(Math.min(total,12));
   document.getElementById('themeBadge').style.display='flex';
   document.getElementById('themeLabel').textContent=themeLabels[themeName]||themeName;
   document.getElementById('btnRevision').style.display='none';
-  update(); showNext();
+  update();
+  window.showNext(); // always uses latest override (timer/voice/free)
 }
 
 function showNext(){
@@ -1591,38 +1588,7 @@ function confirmMode(){
   }, 500);
 }
 
-// ── Override showNext to support timer mode ──
-const _origShowNext = showNext;
-window.showNext = function(){
-  // clear any existing auto-timer
-  if(autoTimer){ clearTimeout(autoTimer); autoTimer=null; }
-  stopTimerBar();
-
-  if(rem.length===0){showFinish();return;}
-  const src=rem.pop();
-  const img=document.getElementById('mainImg');
-  const card=document.getElementById('imgCard');
-  img.src=src;
-  card.classList.remove('flip');
-  void card.offsetWidth;
-  card.classList.add('flip');
-
-  if(gameMode==='timer'){
-    // disable manual buttons in timer mode? No — keep them so teacher can still click
-    document.getElementById('btnOk').disabled=false;
-    document.getElementById('btnKo').disabled=false;
-    startTimerBar(timerDurationMs);
-    autoTimer = setTimeout(()=>{
-      // auto advance = mark as "pas encore" (wrong) if no action taken
-      // Actually: just advance without marking (neutral skip)
-      autoAdvance();
-    }, timerDurationMs);
-  } else {
-    document.getElementById('btnOk').disabled=false;
-    document.getElementById('btnKo').disabled=false;
-  }
-  update();
-};
+// showNext is fully handled by the voice mode override below
 
 function autoAdvance(){
   // In timer mode: if time runs out, mark as Ko automatically
@@ -1664,30 +1630,7 @@ function stopTimerBar(){
 }
 
 // Intercept marquerOk / marquerKo to clear timer
-const _origOk = marquerOk;
-window.marquerOk = function(){
-  if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}
-  stopTimerBar();
-  nOk++;
-  const numEl=document.getElementById('numOk');
-  numEl.classList.remove('bump');void numEl.offsetWidth;numEl.classList.add('bump');
-  showReaction('happy');
-  flash('fg');
-  if(rem.length===0){showFinish();}else{window.showNext();}
-};
-const _origKo = marquerKo;
-window.marquerKo = function(){
-  if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}
-  stopTimerBar();
-  const currentSrc=document.getElementById('mainImg').src;
-  wrongImgs.push(currentSrc);
-  nKo++;
-  const numEl=document.getElementById('numKo');
-  numEl.classList.remove('bump');void numEl.offsetWidth;numEl.classList.add('bump');
-  showReaction('angry');
-  flash('fr');
-  if(rem.length===0){showFinish();}else{window.showNext();}
-};
+// marquerOk and marquerKo fully handled in voice JS section below
 
 // In timer mode, clicking the card should NOT auto-advance (keep original handleClick only for free mode)
 window.handleClick = function(){
@@ -1878,8 +1821,7 @@ window.selectMode = function(mode){
   voicePanel.style.display = mode==='voice' ? 'flex' : 'none';
 };
 
-// ── Extend showNext to handle voice mode ──
-const _origShowNextV2 = window.showNext;
+// ── Master showNext — handles all 3 modes ──
 window.showNext = function(){
   stopListening();
   if(autoTimer){ clearTimeout(autoTimer); autoTimer=null; }
