@@ -1414,21 +1414,29 @@ function showReaction(type){
 }
 
 function marquerOk(){
+  if(typeof autoTimer!=='undefined' && autoTimer){clearTimeout(autoTimer);autoTimer=null;}
+  if(typeof stopTimerBar==='function') stopTimerBar();
+  if(typeof stopListening==='function') stopListening();
   nOk++;
   const numEl=document.getElementById('numOk');
   numEl.classList.remove('bump');void numEl.offsetWidth;numEl.classList.add('bump');
   showReaction('happy');
-  flash('fg'); showNext();
+  flash('fg');
+  if(rem.length===0){showFinish();}else{window.showNext();}
 }
 
 function marquerKo(){
+  if(typeof autoTimer!=='undefined' && autoTimer){clearTimeout(autoTimer);autoTimer=null;}
+  if(typeof stopTimerBar==='function') stopTimerBar();
+  if(typeof stopListening==='function') stopListening();
   const currentSrc=document.getElementById('mainImg').src;
   wrongImgs.push(currentSrc);
   nKo++;
   const numEl=document.getElementById('numKo');
   numEl.classList.remove('bump');void numEl.offsetWidth;numEl.classList.add('bump');
   showReaction('angry');
-  flash('fr'); showNext();
+  flash('fr');
+  if(rem.length===0){showFinish();}else{window.showNext();}
 }
 
 function flash(cls){
