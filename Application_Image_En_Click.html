@@ -799,6 +799,36 @@ a.btn-restart{text-decoration:none}
   100%{transform:translate(-50%,-50%) scale(1);opacity:1}
 }
 
+
+/* Correct word bubble */
+.voice-correct-bubble{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(15,23,42,0.92);backdrop-filter:blur(20px);
+  border:2px solid #fbbf24;border-radius:24px;
+  padding:22px 36px;text-align:center;z-index:200;
+  font-family:'Fredoka One',cursive;color:#fff;
+  box-shadow:0 0 0 6px rgba(251,191,36,0.15),0 24px 60px rgba(0,0,0,0.5);
+  animation:bubblePop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events:none;min-width:200px;
+}
+/* Passer button */
+#voicePasserBtn{
+  pointer-events:all;
+  background:rgba(255,255,255,0.12);
+  border:2px solid rgba(255,255,255,0.3);
+  border-radius:40px;padding:10px 28px;
+  font-family:'Fredoka One',cursive;font-size:1rem;
+  color:rgba(255,255,255,0.85);cursor:pointer;
+  backdrop-filter:blur(8px);
+  transition:all 0.2s;
+  display:flex;align-items:center;gap:8px;
+}
+#voicePasserBtn:hover{
+  background:rgba(255,255,255,0.22);
+  border-color:rgba(255,255,255,0.6);
+  color:#fff;transform:scale(1.04);
+}
+
 </style>
 </head>
 <body>
@@ -1036,6 +1066,10 @@ a.btn-restart{text-decoration:none}
   </div>
   <!-- Feedback text -->
   <div id="voiceFeedback" style="pointer-events:none;text-align:center;width:100%;font-family:'Fredoka One',cursive;font-size:1rem;color:rgba(255,255,255,0.85);text-shadow:0 2px 8px rgba(0,0,0,0.4);min-height:26px;"></div>
+  <!-- Passer button -->
+  <div style="pointer-events:all;display:flex;justify-content:center;width:100%;margin-top:2px;">
+    <button id="voicePasserBtn" onclick="voicePasser()">⏭ Passer</button>
+  </div>
 </div>
 
 <!-- ══ REACTIONS ══ -->
@@ -1667,6 +1701,7 @@ let recognition = null;
 let isListening = false;
 let voiceAutoStart = false;
 let currentExpectedWord = '';
+let voiceGameActive = false; // controls mic auto-restart
 
 
 function showVoiceBlockedMsg(html){
@@ -1710,7 +1745,12 @@ function initSpeechRecognition(){
     document.getElementById('micBtn').classList.remove('listening');
     document.getElementById('micRipple').style.display = 'none';
     document.getElementById('micIcon').textContent = '🎤';
-    document.getElementById('voiceFeedback').textContent = '';
+    // Auto-restart mic if still in voice mode and game is running
+    if(gameMode === 'voice' && voiceGameActive){
+      setTimeout(startListening, 400);
+    } else {
+      document.getElementById('voiceFeedback').textContent = '';
+    }
   };
 
   recognition.onresult = function(e){
@@ -1793,11 +1833,16 @@ function checkVoiceAnswer(heardList){
   if(correct){
     micBtn.classList.add('correct-flash');
     setTimeout(()=>micBtn.classList.remove('correct-flash'), 700);
+    voiceGameActive = false; // pause auto-restart during transition
     window.marquerOk();
   } else {
     micBtn.classList.add('wrong-flash');
     setTimeout(()=>micBtn.classList.remove('wrong-flash'), 700);
-    window.marquerKo();
+    // Show correct word bubble before moving on
+    showCorrectWordBubble(currentExpectedWord, function(){
+      voiceGameActive = false;
+      window.marquerKo();
+    });
   }
 }
 
@@ -1821,7 +1866,21 @@ function startListening(){
 }
 
 function stopListening(){
+  voiceGameActive = false;
   if(recognition && isListening){ try{ recognition.stop(); }catch(e){} }
+}
+
+function showCorrectWordBubble(word, callback){
+  // Remove any existing bubble first
+  document.querySelectorAll('.voice-correct-bubble').forEach(e=>e.remove());
+  const b = document.createElement('div');
+  b.className = 'voice-correct-bubble';
+  b.innerHTML = '<div style="font-size:1rem;color:rgba(255,255,255,0.7);margin-bottom:6px">Le mot correct était :</div><div style="font-size:2rem;font-weight:900;color:#fbbf24;letter-spacing:0.05em">' + word.toUpperCase() + '</div>';
+  document.body.appendChild(b);
+  setTimeout(()=>{
+    b.remove();
+    if(callback) callback();
+  }, 2200);
 }
 
 // Extract expected word from image src
@@ -1860,17 +1919,17 @@ window.showNext = function(){
   card.classList.add('flip');
 
   if(gameMode==='voice'){
+    voiceGameActive = true; // enable auto-restart
     currentExpectedWord = getWordFromSrc(src);
-    // Show expected word hint (blurred initially)
     const wd = document.getElementById('voiceWordDisplay');
     wd.textContent = '🔤 ' + currentExpectedWord;
     wd.style.opacity = '0.15';
     wd.style.filter = 'blur(6px)';
-    document.getElementById('voiceFeedback').textContent = 'Appuie sur 🎤 et dis le mot !';
+    document.getElementById('voiceFeedback').textContent = 'Dis le mot ! 🎤';
     document.getElementById('btnOk').disabled = true;
     document.getElementById('btnKo').disabled = true;
     // Auto-start mic after card flip
-    setTimeout(startListening, 700);
+    setTimeout(startListening, 600);
   } else if(gameMode==='timer'){
     document.getElementById('btnOk').disabled = false;
     document.getElementById('btnKo').disabled = false;
@@ -1924,6 +1983,17 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
 });
+
+function voicePasser(){
+  stopListening();
+  voiceGameActive = false;
+  // Show correct word, then skip (neutral — not counted as wrong)
+  showCorrectWordBubble(currentExpectedWord, function(){
+    if(rem.length===0){ showFinish(); return; }
+    voiceGameActive = true;
+    window.showNext();
+  });
+}
 
 // ── Reset voice overlay when game resets ──
 const _origShowFinish = window.showFinish;
